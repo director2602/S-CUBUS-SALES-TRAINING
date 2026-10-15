@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="S-CUBUS Counsellor Academy: animated training lessons, quizzes and team scorecard for admission counsellors.">
+<meta name="theme-color" content="#400C4D">
+<link rel="icon" type="image/png" href="logo.png">
+<style>*,*::before,*::after{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>S-CUBUS Counsellor Academy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Mukta:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: hero with logo → module path → cinema player + captions → quiz → scoreboard. Light plum & rose-gold. */
+:root{
+  --plum:#400C4D; --plum-2:#5A1F68; --plum-ink:#2A0733;
+  --rose:#B76E79; --rose-2:#D9A5A0; --rose-pale:#F6E4E1;
+  --bg:#FBF6F5; --card:#FFFFFF; --line:#EADBDB; --muted:#76606F; --fg:#2A1730;
+  --ok:#2E7D5B; --ok-bg:#E5F3EC; --bad:#B23A48; --bad-bg:#FBE7EA;
+  --rg:linear-gradient(135deg,#E8C3B8 0%,#B76E79 45%,#E9C9BE 70%,#A5636C 100%);
+  --display:"Marcellus","Cormorant Garamond",Georgia,serif;
+  --body:"Mukta","Noto Sans Devanagari","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;color:var(--plum)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+
+/* HERO */
+.hero{background:radial-gradient(1200px 400px at 85% -10%,#F3DCD6 0%,transparent 60%),linear-gradient(180deg,#FFFFFF 0%,var(--bg) 100%);border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:40px;align-items:center;padding-block:40px 36px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);font-weight:600}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:10px 0 14px}
+.hero h1 em{font-style:normal;background:var(--rg);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:56ch;margin:0 0 22px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:24px;font-size:15px;color:var(--plum)}
+.facts b{font-family:var(--display);font-size:24px;font-weight:400;margin-right:6px}
+.namebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;max-width:520px}
+.namebox label{width:100%;font-size:13px;color:var(--muted)}
+.namebox input{flex:1 1 220px;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--fg)}
+.btn{border:0;border-radius:999px;padding:12px 22px;font-weight:600;font-size:15px;background:var(--plum);color:#fff;display:inline-flex;gap:8px;align-items:center}
+.btn:hover{background:var(--plum-2)}
+.btn.ghost{background:transparent;color:var(--plum);box-shadow:inset 0 0 0 1.5px var(--plum)}
+.btn.rose{background:var(--rose);}
+.logo-plate{position:relative;justify-self:center;width:min(340px,100%);aspect-ratio:1/1.05;display:grid;place-items:center}
+.logo-plate::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 45%,#fff 0 58%,transparent 59%),var(--rg);opacity:.95;animation:spin 30s linear infinite}
+.logo-plate::after{content:"";position:absolute;inset:6%;border-radius:50%;background:#fff;box-shadow:0 20px 60px -20px rgba(64,12,77,.35)}
+.logo-plate img{position:relative;z-index:1;width:66%;height:auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODULE PATH */
+section{padding-block:36px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.sec-head h2{font-size:30px}
+.sec-head p{margin:0;color:var(--muted)}
+.mods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.mod{position:relative;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px 14px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;color:var(--fg);transition:transform .2s,box-shadow .2s}
+.mod:hover{transform:translateY(-2px);box-shadow:0 10px 30px -14px rgba(64,12,77,.35)}
+.mod.active{border-color:var(--plum);box-shadow:0 0 0 2px var(--plum) inset}
+.mod .num{font-family:var(--display);font-size:30px;line-height:1;background:var(--rg);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mod h3{font-size:18px;line-height:1.2}
+.mod .meta{font-size:13px;color:var(--muted)}
+.mod .st{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:6px}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;background:var(--rose-pale);color:var(--plum)}
+.pill.done{background:var(--ok-bg);color:var(--ok)}
+.pill.bonus{background:var(--plum);color:#fff}
+.stars{color:var(--rose);letter-spacing:1px;font-size:14px}
+
+/* PLAYER */
+.player{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+.screen{border-radius:16px;overflow:hidden;background:var(--plum-ink);box-shadow:0 30px 70px -30px rgba(64,12,77,.55)}
+.stage-box{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#F8EEF0}
+.stage{position:absolute;left:0;top:0;width:960px;height:540px;transform-origin:0 0;font-family:var(--body);color:var(--fg)}
+.caption{background:var(--plum);color:#fff;padding:12px 18px 14px;min-height:76px;display:flex;gap:12px;align-items:flex-start}
+.caption .who{flex:none;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--rose-2);padding-top:3px;min-width:0}
+.caption .txt{font-size:17px;line-height:1.4;min-width:0}
+.caption.off .txt{opacity:.25}
+.controls{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--plum-ink);color:#fff;flex-wrap:wrap}
+.cbtn{background:transparent;border:0;color:#fff;font-size:14px;padding:6px 10px;border-radius:8px;font-weight:600}
+.cbtn:hover{background:rgba(255,255,255,.12)}
+.cbtn.play{width:40px;height:40px;border-radius:50%;background:var(--rose);display:grid;place-items:center;padding:0}
+.cbtn.play svg{width:18px;height:18px;fill:#fff}
+.bar{flex:1 1 160px;min-width:120px;height:22px;position:relative;cursor:pointer;touch-action:none}
+.bar .track{position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)}
+.bar .fill{position:absolute;left:0;top:9px;height:4px;border-radius:2px;background:var(--rg);width:0}
+.bar .tick{position:absolute;top:7px;width:2px;height:8px;background:rgba(255,255,255,.35)}
+.time{font-variant-numeric:tabular-nums;font-size:13px;color:#E9D3D6}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.panel h3{font-size:19px;margin-bottom:8px}
+.cast{display:flex;flex-direction:column;gap:10px}
+.castm{display:flex;gap:10px;align-items:center}
+.castm .av{width:46px;height:46px;border-radius:50%;overflow:hidden;background:var(--rose-pale);flex:none;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.castm .av svg,.castm .av img{width:100%;height:100%;object-fit:cover;display:block}
+.castm b{display:block;font-size:14px;color:var(--plum)}
+.castm span{font-size:12px;color:var(--muted)}
+.castm.speaking .av{box-shadow:0 0 0 3px var(--rose)}
+.note{font-size:13px;color:var(--muted)}
+.transcript{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.tl{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;text-align:left;background:transparent;border:0;padding:6px;border-radius:8px;font-size:13px;color:var(--fg)}
+.tl:hover{background:var(--rose-pale)}
+.tl.now{background:#F3E3EA}
+.tl i{font-style:normal;color:var(--rose);font-variant-numeric:tabular-nums}
+.endcard{position:absolute;inset:0;display:grid;place-items:center;background:rgba(64,12,77,.82);color:#fff;text-align:center;z-index:30}
+.endcard h3{color:#fff;font-size:30px;margin-bottom:6px}
+.endcard p{margin:0 0 16px;color:#F1DADB}
+.startcard{position:absolute;inset:0;display:grid;place-items:center;z-index:30;background:linear-gradient(180deg,rgba(64,12,77,.15),rgba(64,12,77,.55));border:0;width:100%;padding:0}
+.startcard .big{width:84px;height:84px;border-radius:50%;background:var(--rose);display:grid;place-items:center;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.startcard .big svg{width:34px;height:34px;fill:#fff;margin-left:6px}
+
+/* QUIZ */
+.quiz{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:16px}
+.qtop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.qprog{display:flex;gap:6px}
+.qprog span{width:28px;height:6px;border-radius:3px;background:var(--line)}
+.qprog span.ok{background:var(--ok)} .qprog span.bad{background:var(--bad)} .qprog span.cur{background:var(--plum)}
+.qq{font-family:var(--display);font-size:24px;color:var(--plum);line-height:1.3;max-width:60ch}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;font-size:16px;color:var(--fg);display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.opt:hover:not([disabled]){border-color:var(--rose)}
+.opt .k{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--rose-pale);color:var(--plum);font-weight:700;font-size:14px}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)} .opt.right .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)} .opt.wrong .k{background:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+.why{border-radius:12px;padding:12px 14px;background:var(--rose-pale);color:var(--plum-ink)}
+.why b{color:var(--plum)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.score-big{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.ring{width:130px;height:130px;flex:none}
+.locked{color:var(--muted);text-align:center;padding:28px}
+
+/* SCOREBOARD */
+.board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;align-items:start}
+.mine{display:grid;gap:12px}
+.mtotal{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.mtotal b{font-family:var(--display);font-size:52px;font-weight:400;color:var(--plum);line-height:1;font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--rg);color:#fff;font-weight:600;font-size:14px}
+.mrow{display:grid;grid-template-columns:28px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:14px}
+.mrow .meter{height:8px;border-radius:4px;background:var(--rose-pale);overflow:hidden}
+.mrow .meter i{display:block;height:100%;background:var(--plum);border-radius:4px}
+.mrow .n{font-family:var(--display);color:var(--rose);font-size:18px}
+.mrow .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--plum);font-weight:600}
+.lbwrap{overflow-x:auto}
+table.lb{width:100%;border-collapse:collapse;font-size:14px;min-width:420px}
+.lb th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
+.lb td{padding:10px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.lb tr.me td{background:#F7EAF0}
+.lb .rk{font-family:var(--display);font-size:20px;color:var(--rose);width:44px}
+.lb .rk.g1{color:#B8862E}
+.lb .pts{font-weight:700;color:var(--plum);text-align:right}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:12px}
+footer{padding-block:30px 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer a{color:var(--plum)}
+
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr}
+  .logo-plate{width:220px;order:-1}
+  .mods{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .player,.board{grid-template-columns:1fr}
+}
+@media (max-width:520px){ .caption{flex-direction:column;gap:2px} .mods{grid-template-columns:1fr} .caption .txt{font-size:15px} .qq{font-size:20px} }
+
+
+/* FULL SCREEN */
+.screen.fs{position:fixed;inset:0;z-index:1000;border-radius:0;display:flex;flex-direction:column;justify-content:center;background:#140318;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.screen:fullscreen{display:flex;flex-direction:column;justify-content:center;background:#140318}
+.screen.fs .stage-box,.screen:fullscreen .stage-box{width:min(100vw,calc((100vh - 160px) * 16 / 9));margin:0 auto}
+.screen.fs .caption,.screen:fullscreen .caption,.screen.fs .controls,.screen:fullscreen .controls{box-sizing:border-box;width:min(100vw,calc((100vh - 160px) * 16 / 9));margin:0 auto}
+body.noscroll{overflow:hidden}
+/* SHARE */
+.share{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.lnk{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.lnk b{display:block;font-size:14px;color:var(--plum)}
+.lnk code{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace}
+/* DASHBOARD */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi b{display:block;font-family:var(--display);font-weight:400;font-size:38px;line-height:1.1;color:var(--plum);font-variant-numeric:tabular-nums}
+.kpi small{color:var(--muted);font-size:13px}
+.dgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.hb{display:grid;grid-template-columns:150px minmax(0,1fr) 120px;gap:10px;align-items:center;padding:7px 0;font-size:14px}
+.hb .tr{height:14px;background:var(--rose-pale);border-radius:4px;position:relative}
+.hb .tr i{position:absolute;left:0;top:0;bottom:0;background:var(--plum);border-radius:0 4px 4px 0}
+.hb .tr .pm{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--rose)}
+.hb .val{font-variant-numeric:tabular-nums;color:var(--fg);text-align:right;font-size:13px}
+.hq{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.hq em{font-style:normal;font-size:12px;color:var(--rose);font-weight:600;display:block}
+.hq b{font-variant-numeric:tabular-nums;color:var(--bad);text-align:right}
+table.mx{width:100%;border-collapse:separate;border-spacing:3px;font-size:14px;min-width:640px}
+.mx th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:6px;letter-spacing:.06em;text-transform:uppercase}
+.mx th:first-child{text-align:left}
+.mx td{padding:8px;text-align:center;border-radius:6px;font-variant-numeric:tabular-nums}
+.mx td:first-child{text-align:left;font-weight:600;color:var(--plum);background:transparent}
+.mx td.na{color:var(--muted);background:#F7F1F2}
+.dash-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dgrid{grid-template-columns:1fr}.hb{grid-template-columns:110px minmax(0,1fr) 92px}}
+/* OBJECTION BANK */
+.ob-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.ob-tools input{flex:1 1 240px;min-width:0;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--fg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+.chip.on{background:var(--plum);color:#fff;border-color:var(--plum)}
+.chip i{font-style:normal;opacity:.65;margin-left:4px}
+.toggle{white-space:nowrap;display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--plum);font-weight:600}
+.toggle input{width:18px;height:18px;accent-color:var(--plum)}
+.ob-list{display:grid;gap:10px}
+.ob-cat{font-family:var(--display);font-size:22px;color:var(--plum);margin:14px 0 2px}
+.ob{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ob summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:40px minmax(0,1fr) 24px;gap:12px;align-items:center;padding:14px 16px}
+.ob summary::-webkit-details-marker{display:none}
+.ob .qn{font-family:var(--display);color:var(--rose);font-size:20px}
+.ob .qt{font-size:17px;font-weight:600;color:var(--plum-ink);line-height:1.4}
+.ob .chev{color:var(--rose);transition:transform .2s;font-size:18px}
+.ob[open] .chev{transform:rotate(90deg)}
+.ob .body{padding:0 16px 16px 68px;display:grid;gap:10px}
+.ob .ans{background:var(--rose-pale);border-radius:12px;padding:12px 14px;line-height:1.5}
+.ob .ans b,.ob .ready b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);margin-bottom:2px}
+.ob .ready{font-size:14px;color:var(--muted);border-left:3px solid var(--rose-2);padding-left:12px}
+.ob .acts{display:flex;gap:8px;flex-wrap:wrap}
+.mini{border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:600}
+.ob.practice .ans{filter:blur(6px);user-select:none}
+.ob.practice.shown .ans{filter:none;user-select:auto}
+@media (max-width:520px){.ob .body{padding-left:16px}}
+
+/* ===== STAGE (960x540 canvas) ===== */
+.stage *{box-sizing:border-box}
+.bgfx{position:absolute;inset:0;overflow:hidden;background:linear-gradient(160deg,#FDF7F6 0%,#F5E6E8 60%,#EFD9DF 100%)}
+.orb{position:absolute;border-radius:50%;border:2px solid rgba(183,110,121,.35);animation:drift 14s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,-24px) scale(1.08)}}
+.brand{position:absolute;left:22px;top:18px;display:flex;align-items:center;gap:10px;z-index:20;background:rgba(255,255,255,.85);padding:6px 12px 6px 6px;border-radius:999px;box-shadow:0 4px 14px rgba(64,12,77,.12)}
+.brand img{width:30px;height:32px;object-fit:contain}
+.brand span{font-size:13px;font-weight:600;color:var(--plum);letter-spacing:.04em}
+.layer{position:absolute;inset:0;transition:opacity .5s ease}
+.layer.hide{opacity:0;pointer-events:none}
+/* title scene */
+.t-scene{display:flex;flex-direction:column;justify-content:center;padding:70px 90px 30px;gap:12px;height:100%}
+.t-n{font-family:var(--display);font-size:100px;line-height:.9;background:var(--rg);-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.t-n.word{font-size:64px}
+.t-h{font-family:var(--display);font-size:62px;color:var(--plum);line-height:1.05;max-width:720px;animation:rise .9s .15s cubic-bezier(.2,.8,.2,1) both}
+.t-p{font-size:26px;color:var(--muted);animation:rise .9s .3s cubic-bezier(.2,.8,.2,1) both}
+.t-line{height:3px;width:0;background:var(--rg);animation:grow 1.2s .4s ease forwards}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes grow{to{width:260px}}
+/* generic info scene */
+.i-scene{padding:84px 200px 30px 70px}
+.i-list.many{grid-template-columns:1fr 1fr;max-width:690px;gap:12px}
+.i-list.many .i-item{font-size:21px;padding:12px 16px}
+.i-list.many .bul{width:36px;height:36px;font-size:18px}
+.l3{position:absolute;left:24px;bottom:22px;z-index:18;display:flex;align-items:stretch;opacity:0;transform:translateX(-30px);transition:all .45s cubic-bezier(.2,.8,.2,1)}
+.l3.on{opacity:1;transform:none}
+.l3 i{width:6px;background:var(--rg);border-radius:3px 0 0 3px}
+.l3 div{background:rgba(64,12,77,.92);color:#fff;padding:8px 16px 9px;border-radius:0 10px 10px 0}
+.l3 b{display:block;font-family:var(--display);font-weight:400;font-size:24px;line-height:1.1}
+.l3 span{font-size:14px;color:var(--rose-2);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.person .tag{display:none}
+.i-h{font-family:var(--display);font-size:42px;color:var(--plum);margin-bottom:24px;animation:rise .7s both}
+.i-list{display:grid;gap:14px;max-width:640px}
+.i-item{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:600;color:var(--plum-ink);background:#fff;border-radius:16px;padding:14px 22px;box-shadow:0 8px 24px -14px rgba(64,12,77,.4);opacity:.0;transform:translateX(-40px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
+.i-item.on{opacity:1;transform:none}
+.i-item .bul{width:44px;height:44px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:22px;flex:none}
+.i-item.check .bul{background:var(--ok)}
+.i-item.cur{box-shadow:0 0 0 3px var(--rose),0 12px 30px -14px rgba(64,12,77,.5)}
+/* flow */
+.f-row{display:flex;flex-wrap:wrap;gap:16px 0;align-items:center;max-width:690px;margin-top:20px}
+.f-step{display:flex;align-items:center;opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.92)}
+.f-step.on{opacity:1;transform:none}
+.f-box{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 18px;font-size:22px;font-weight:600;color:var(--plum);min-width:120px;text-align:center;transition:all .5s}
+.f-step.cur .f-box{background:var(--plum);color:#fff;border-color:var(--plum);box-shadow:0 12px 30px -10px rgba(64,12,77,.6)}
+.f-box small{display:block;font-size:13px;font-weight:600;color:var(--rose);letter-spacing:.1em}
+.f-step.cur .f-box small{color:var(--rose-2)}
+.f-arr{width:34px;height:3px;background:var(--rg);margin:0 6px;position:relative}
+.f-arr::after{content:"";position:absolute;right:-2px;top:-5px;border-left:9px solid #B76E79;border-top:6.5px solid transparent;border-bottom:6.5px solid transparent}
+/* cards */
+.c-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:700px}
+.c-grid:not(.n3):not(.n4) .c-card{min-height:104px;padding:12px}
+.c-grid:not(.n3):not(.n4) .c-card b{font-size:19px}
+.c-grid:not(.n3):not(.n4) .c-card span{font-size:14px}
+.c-grid.n3{grid-template-columns:repeat(3,1fr)}
+.c-grid.n4{grid-template-columns:repeat(2,1fr)}
+.c-card{background:#fff;border-radius:16px;padding:16px;min-height:118px;box-shadow:0 10px 26px -16px rgba(64,12,77,.45);opacity:0;transform:translateY(26px) scale(.96);transition:all .6s cubic-bezier(.2,.8,.2,1);border-top:4px solid var(--rose)}
+.c-card.on{opacity:1;transform:none}
+.c-card b{display:block;font-family:var(--display);font-weight:400;color:var(--plum);font-size:22px;line-height:1.15;margin-bottom:6px}
+.c-card span{font-size:16px;color:var(--muted);line-height:1.35;display:block}
+.c-grid.n3 .c-card b{font-size:28px} .c-grid.n3 .c-card span{font-size:19px} .c-grid.n3 .c-card{min-height:200px;padding:22px}
+.c-grid.n4 .c-card b{font-size:26px} .c-grid.n4 .c-card span{font-size:20px}
+/* stat */
+.s-row{display:flex;gap:40px;margin-top:20px}
+.s-box{background:#fff;border-radius:22px;padding:26px 34px;box-shadow:0 14px 40px -20px rgba(64,12,77,.45);opacity:0;transform:translateY(30px);transition:all .7s}
+.s-box.on{opacity:1;transform:none}
+.s-box b{display:block;font-family:var(--display);font-weight:400;font-size:96px;line-height:1;color:var(--plum)}
+.s-box.lose b{color:var(--rose)}
+.s-box span{font-size:20px;color:var(--muted)}
+.s-src{margin-top:26px;font-size:16px;color:var(--muted);opacity:0;transition:opacity .6s}
+.s-src.on{opacity:1}
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:700px}
+.cmp-col{background:#fff;border-radius:18px;padding:18px 22px;box-shadow:0 10px 30px -18px rgba(64,12,77,.45)}
+.cmp-col h4{margin:0 0 10px;font-size:22px;display:flex;gap:10px;align-items:center}
+.cmp-col.do h4{color:var(--ok)} .cmp-col.dont h4{color:var(--bad)}
+.cmp-it{font-size:20px;padding:9px 0;border-top:1px solid var(--line);opacity:0;transform:translateX(-20px);transition:all .5s}
+.cmp-it.on{opacity:1;transform:none}
+/* table */
+.tb{display:grid;gap:10px;max-width:700px}
+.tb-r{display:grid;grid-template-columns:170px 1fr 1fr;gap:14px;background:#fff;border-radius:14px;padding:12px 18px;align-items:center;opacity:0;transform:translateY(16px);transition:all .5s;box-shadow:0 8px 22px -16px rgba(64,12,77,.45)}
+.tb-r.on{opacity:1;transform:none}
+.tb-r b{font-family:var(--display);font-weight:400;font-size:22px;color:var(--plum)}
+.tb-r span{font-size:17px;color:var(--fg);line-height:1.3}
+.tb-r span+span{color:var(--muted)}
+.tb.six .tb-r{padding:8px 16px} .tb.six .tb-r b{font-size:19px} .tb.six .tb-r span{font-size:15px}
+/* lens */
+.lens{position:relative;height:340px;max-width:820px}
+.lc{position:absolute;top:30px;width:290px;height:290px;border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;transition:all 1.2s cubic-bezier(.2,.8,.2,1)}
+.lc b{font-family:var(--display);font-weight:400;font-size:32px}
+.lc span{font-size:17px;margin-top:6px}
+.lc.a{left:0;background:rgba(64,12,77,.88);color:#fff}
+.lc.b{left:400px;background:rgba(183,110,121,.85);color:#fff}
+.lens.on .lc.a{left:90px} .lens.on .lc.b{left:310px}
+.lens .mid{position:absolute;left:270px;top:150px;width:220px;text-align:center;font-family:var(--display);font-size:22px;color:#fff;opacity:0;transition:opacity .8s 1s;z-index:2;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.lens.on .mid{opacity:1}
+/* narrator bubble */
+.narr{position:absolute;right:26px;bottom:20px;width:150px;height:150px;border-radius:50%;overflow:hidden;background:var(--rose-pale);border:4px solid #fff;box-shadow:0 0 0 3px var(--rose),0 14px 30px -10px rgba(64,12,77,.5);z-index:15;transition:transform .5s,opacity .5s}
+.narr.hide{transform:scale(.6);opacity:0}
+.narr-name{position:absolute;right:30px;bottom:176px;background:var(--plum);color:#fff;font-size:14px;font-weight:600;padding:4px 12px;border-radius:999px;z-index:16;transition:opacity .4s}
+/* dialog office */
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.actor{position:absolute;bottom:0;transition:filter .5s,transform .5s;transform-origin:50% 100%}
+.actor .rig{position:absolute;inset:0;transform-origin:50% 85%;will-change:transform}
+.actor .rig>img{width:100%;height:100%;display:block}
+.mouthin{position:absolute;height:0;transform:translate(-50%,-1px);border-radius:50%;background:radial-gradient(ellipse at 50% 35%,#6a2a30 0,#2b0b0f 75%);filter:blur(.5px);opacity:.92}
+.jaw{position:absolute;inset:0;background-size:100% 100%;will-change:transform}
+.actor.dim{filter:blur(1.6px) brightness(.9)}
+.desk{position:absolute;left:-20px;right:-20px;bottom:-10px;height:150px;background:linear-gradient(180deg,#FDFDFC 0,#F1F0EE 14px,#E9E7E4 100%);box-shadow:0 -10px 30px rgba(0,0,0,.18);border-top:1px solid #fff}
+.desk.short{height:70px}
+.desk .paper{position:absolute;left:560px;top:16px;background:#fff;border:1px solid #E6DADB;padding:8px 14px;font-style:normal;font-size:12px;font-weight:700;color:#400C4D;transform:rotate(-4deg);box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.desk .paper.p2{left:330px;top:22px;width:110px;height:30px;background:#F6E4E1;transform:rotate(3deg)}
+.pip{position:absolute;right:22px;top:22px;z-index:14;background:rgba(20,3,24,.55);padding:5px;border-radius:12px;box-shadow:0 0 0 2px #D9A5A0,0 10px 24px rgba(0,0,0,.3)}
+.pip-imgs{display:flex;gap:4px}
+.pip-imgs img{width:112px;height:112px;object-fit:cover;border-radius:8px;display:block}
+.pip span{position:absolute;left:10px;bottom:10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(64,12,77,.85);padding:2px 8px;border-radius:999px}
+.wave{display:inline-flex;gap:3px;align-items:flex-end;height:18px;margin-left:10px;vertical-align:middle}
+.wave i{width:3px;border-radius:2px;background:#E9C9BE;height:4px;transition:height .08s}
+.narr{display:grid;place-items:center}
+.narr svg{width:100%;height:100%}
+.shot{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}
+.shot.on{opacity:1}
+.cam{position:absolute;inset:0;transform-origin:50% 45%;transition:transform 6s cubic-bezier(.2,.6,.3,1)}
+.fg{position:absolute;inset:0;pointer-events:none}
+.back{position:absolute;bottom:-150px;filter:blur(2.2px) brightness(.85)}
+.back svg{display:block;width:100%;height:auto}
+.chair{position:absolute;bottom:200px;height:170px;border-radius:60px 60px 10px 10px;background:repeating-linear-gradient(45deg,#7A5A44 0 6px,#8A6A52 6px 12px);box-shadow:inset 0 -20px 30px rgba(0,0,0,.2)}
+
+.office{position:absolute;inset:0;transition:transform 1.4s cubic-bezier(.3,.7,.2,1);transform-origin:50% 60%}
+.person{position:absolute;bottom:120px;transition:transform .5s}
+.person .p-svg{display:block;width:100%;height:auto;animation:breathe 4s ease-in-out infinite}
+.person.talk .p-svg{animation:breathe 4s ease-in-out infinite,talkbob 1.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes talkbob{0%,100%{rotate:0deg}30%{rotate:-1.6deg}70%{rotate:1.2deg}}
+.person .tag{position:absolute;left:50%;top:-14px;transform:translate(-50%,-100%);white-space:nowrap;background:var(--plum);color:#fff;font-size:15px;font-weight:600;padding:5px 14px;border-radius:999px;opacity:0;transition:opacity .35s}
+.person.talk .tag{opacity:1}
+.person .glow{position:absolute;left:10%;right:10%;bottom:-6px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(183,110,121,.55),transparent);opacity:0;transition:opacity .4s}
+.person.talk .glow{opacity:1}
+.eyes{animation:blink 5s infinite;transform-origin:100px 108px}
+@keyframes blink{0%,46%,50%,100%{transform:scaleY(1)}48%{transform:scaleY(.08)}}
+.bubble{position:absolute;max-width:360px;background:#fff;border-radius:18px;padding:12px 16px;font-size:17px;line-height:1.35;color:var(--plum-ink);box-shadow:0 12px 30px -12px rgba(64,12,77,.45);z-index:12;opacity:0;transform:translateY(10px) scale(.96);transition:all .35s}
+.bubble.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Admission Support Officer training</div>
+      <h1>S-CUBUS <em>Counsellor</em> Academy</h1>
+      <p class="lead">Five short animated lessons with real-voice role plays in Hinglish. After each video, a quiz checks what you learned, and your score goes on the team scoreboard.</p>
+      <div class="facts"><span><b>5</b>video lessons</span><span><b>25</b>questions</span><span><b id="factMin">12</b>minutes of video</span><span><b>250</b>points</span><span><b>44</b>parent objections</span></div>
+      <div class="namebox">
+        <label for="trainee">Your name on the scoreboard</label>
+        <input id="trainee" type="text" maxlength="40" placeholder="e.g. Neha Kapoor" autocomplete="name">
+        <button class="btn" id="startBtn" type="button">Start Module 1</button>
+        <a class="btn ghost" href="#obSec" style="text-decoration:none">Objection bank</a>
+        <a class="btn ghost" href="#dashboard" style="text-decoration:none">Scorecard</a>
+      </div>
+    </div>
+    <div class="logo-plate"><img src="logo.png" alt="S-CUBUS — NEET · IIT-JEE · Foundation"></div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Your learning path</h2><p>Watch the video, then pass the quiz. 80% earns the module badge.</p></div>
+      <div class="mods" id="mods"></div>
+    </div>
+  </section>
+
+  <section id="playerSec" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="pTitle">Module</h2><p id="pSub"></p></div>
+      <div class="player">
+        <div class="screen">
+          <div class="stage-box" id="stageBox">
+            <div class="stage" id="stage"></div>
+            <button class="startcard" id="startCard" type="button" aria-label="Play video"><span class="big"><svg viewBox="0 0 24 24"><path d="M5 3l16 9-16 9z"/></svg></span></button>
+            <div class="endcard" id="endCard" hidden><div><h3>Lesson complete</h3><p>Five questions are waiting for you.</p><button class="btn rose" id="toQuiz" type="button">Take the quiz</button> <button class="btn ghost" id="replay" type="button" style="color:#fff;box-shadow:inset 0 0 0 1.5px #fff">Replay</button></div></div>
+          </div>
+          <div class="caption" id="caption"><div class="who" id="capWho">Ready</div><div class="txt" id="capTxt">Press play to start the lesson. Subtitles appear here.</div></div>
+          <div class="controls">
+            <button class="cbtn play" id="playBtn" type="button" aria-label="Play"><svg viewBox="0 0 24 24" id="playIco"><path d="M6 4l14 8-14 8z"/></svg></button>
+            <div class="bar" id="bar" role="slider" aria-label="Seek" tabindex="0"><div class="track"></div><div class="fill" id="fill"></div><div id="ticks"></div></div>
+            <span class="time" id="time">0:00 / 0:00</span>
+            <button class="cbtn" id="speedBtn" type="button" aria-label="Playback speed">1.25×</button>
+            <button class="cbtn" id="ccBtn" type="button">CC</button>
+            <button class="cbtn" id="fsBtn" type="button">Full screen</button>
+          </div>
+        </div>
+        <div class="side">
+          <div class="panel"><h3>In this lesson</h3><div class="cast" id="cast"></div></div>
+          <div class="panel"><h3>Transcript</h3><div class="note">Tap a line to jump there.</div><div class="transcript" id="transcript"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quizSec" style="padding-top:8px">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="qTitle">Quiz</h2><p>10 points per correct answer</p></div>
+      <div class="quiz" id="quiz"></div>
+    </div>
+  </section>
+
+  <section id="obSec">
+    <div class="wrap">
+      <div class="sec-head"><h2>Parent objection bank</h2><p>44 questions parents ask, with suggested answers and what to keep ready.</p></div>
+      <div class="ob-tools"><input id="obSearch" type="search" placeholder="Search, e.g. fees, hostel, rank, app"><label class="toggle"><input type="checkbox" id="obPractice"> Practice mode (hide answers)</label></div>
+      <div class="chips" id="obChips"></div>
+      <div class="ob-list" id="obList"></div>
+      <p class="note" style="margin-top:14px">Suggested answers are starting points. For fees, discounts, refunds, app features, transport and hostels, always quote the current approved details. Never promise ranks or invent scarcity.</p>
+    </div>
+  </section>
+
+  <section id="dashboard">
+    <div class="wrap">
+      <div class="sec-head"><h2>Manager scorecard</h2><div class="dash-actions"><span class="note" id="dashNote">Updates live as counsellors finish quizzes.</span><button class="btn ghost" type="button" id="csvBtn" hidden>Download CSV</button></div></div>
+      <div id="dash"></div>
+    </div>
+  </section>
+
+  <section id="shareSec">
+    <div class="wrap">
+      <div class="sec-head"><h2>Share links</h2><p>Send a link to open a lesson or jump straight to a quiz. Anyone with the link can open them — no login needed.</p></div>
+      <div class="share" id="share"></div>
+    </div>
+  </section>
+
+  <section id="boardSec">
+    <div class="wrap">
+      <div class="sec-head"><h2>Scoreboard</h2><p id="boardNote">Best score per module counts.</p></div>
+      <div class="board">
+        <div class="panel mine" id="mine"></div>
+        <div class="panel"><h3>Team leaderboard</h3><div id="lb"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap">Based on the S-CUBUS Counsellor Training guide (Edu Space Consulting, Oct 2026). Research references: Neil Rackham, <i>SPIN Selling</i> (1988); <a href="https://www.gong.io/resources/labs/talk-to-listen-conversion-ratio/" target="_blank" rel="noopener">Gong Labs talk-to-listen analysis</a>; the LAER objection model. Characters and voices are AI-generated.</div></footer>
+
+<script>
+const DATA = {"videos": [{"id": "m1", "title": "Understand First", "sub": "The discovery conversation", "cast": ["neha", "sunita", "ananya"], "segs": [{"who": "arjun", "s": "Module one: Understand First. S Cubus mein har admission conversation brochure se nahi, sunne se shuru hoti hai.", "v": {"k": "title", "n": "01", "h": "Understand First", "p": "The discovery conversation"}}, {"who": "meera", "s": "Hamara core principle chaar hisson mein hai. Pehle samjhiye. Phir reason ke saath recommend kijiye. Value dikhaiye. Aur phir decision ke liye poochhiye.", "v": {"k": "list", "h": "The core principle", "items": ["Understand first", "Recommend with reasons", "Demonstrate value", "Ask for a decision"]}}, {"who": "arjun", "s": "Har conversation ke saat steps hain: connect, discover, summarise, recommend, proof ke saath explain, concerns ka jawaab, aur decision. Pehle 5 se 7 minute sirf enquiry samajhne mein lagaiye.", "v": {"k": "flow", "h": "The seven-step conversation", "steps": ["Connect", "Discover", "Summarise", "Recommend", "Explain with proof", "Answer concerns", "Ask for decision"]}}, {"who": "meera", "s": "Chaliye dekhte hain, Neha kaise Mrs Gupta aur unki beti Ananya ki enquiry lete hain.", "v": {"k": "title", "n": "Role play", "h": "Neha meets Mrs Gupta and Ananya", "p": "Watch how she discovers before she pitches"}}, {"who": "neha", "s": "Namaste, main S Cubus se Neha bol rahi hoon. Aapki enquiry ke liye thank you. Kya abhi do minute baat kar sakte hain?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Ji haan, bataiye. Meri beti Ananya Class 11 mein hai, aur woh NEET ki taiyari karna chahti hai.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Ananya, aapko medical field mein kya attract karta hai? Aur kaun se topics mushkil lagte hain?", "v": {"k": "dialog"}}, {"who": "ananya", "s": "Mujhe Biology bahut pasand hai! Lekin Physics ke numericals mein doubts reh jaate hain, aur koi time par clear nahi karta.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Aur ma'am, aapko kis baat se confidence milega ki programme sahi hai?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Mujhe regular update chahiye, ki woh har hafte sach mein practice kar rahi hai ya nahi.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Toh aapki priority hai Physics ke concepts strong karna, regular practice aur doubts ka timely solution. Aur aapko progress ki visibility chahiye. Kya maine sahi samjha?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Ji, bilkul sahi!", "v": {"k": "dialog"}}, {"who": "meera", "s": "Dhyaan dijiye: Neha ne pehle student se seedha poochha, phir parent ki raay li. Poori discovery aath areas cover karti hai: goal, academic starting point, interest, study habits, support need, feasibility, parent concerns aur decision process.", "v": {"k": "cards", "h": "Eight discovery areas", "items": [["Goal", "What to improve this year?"], ["Starting point", "Easy and hard topics, recent tests"], ["Interest", "What attracts you to this path?"], ["Habits", "How do you study and clear doubts?"], ["Support need", "Concepts, practice, consistency or confidence?"], ["Feasibility", "Timings, travel, study load"], ["Parent concerns", "What would build your confidence?"], ["Decision", "Who decides, what is still needed?"]]}}, {"who": "arjun", "s": "Research bhi yahi kehti hai. Gong ne laakhon recorded sales calls analyse kiye. Jeeti hui deals mein seller lagbhag 57% time bole, aur haari hui deals mein 62%, lambe monologues ke saath. Isliye poochhiye, rukiye aur dohraaiye.", "v": {"k": "stat", "h": "Talk less, win more", "a": ["57%", "seller talk time in won deals"], "b": ["62%", "seller talk time in lost deals"], "src": "Gong Labs analysis of recorded sales calls"}}, {"who": "meera", "s": "Kabhi mat maaniye ki marks, parents ki ichchha ya kisi ek subject ka interest career tay kar deta hai. Pitch se pehle dono ki baat summarise kijiye. Ab paanch chhote sawaalon se khud ko test kijiye.", "v": {"k": "compare", "h": "Discovery do's and don'ts", "do": ["Ask the student first, then the parent", "Summarise both views and confirm", "Note feasibility: timings, travel, load"], "dont": ["Pitch in the first minute", "Assume marks decide the career", "Talk in long monologues"]}}], "timeline": [{"start": 0.4, "end": 9.602}, {"start": 10.052, "end": 22.015}, {"start": 22.465, "end": 37.807}, {"start": 38.257, "end": 44.17}, {"start": 44.62, "end": 53.482}, {"start": 53.932, "end": 60.943}, {"start": 61.393, "end": 67.76}, {"start": 68.21, "end": 77.67}, {"start": 78.12, "end": 83.172}, {"start": 83.622, "end": 89.331}, {"start": 89.781, "end": 103.81}, {"start": 104.26, "end": 105.632}, {"start": 106.082, "end": 123.944}, {"start": 124.394, "end": 144.901}, {"start": 145.351, "end": 159.165}], "dur": 159.615, "env": "0000000000257997212489964226421100000000000000069986599610008887651006632110000000000000005993000047416830035541244200000000027823464114544003643473100355111210000000000013587301762003534422221000000000003876657610055300005556312420131000000000000000001698887756500069997200004787511350066641013644433036121164444321320000000000000000598468688831118767311366532000000000000002499640068665666305951213655530000000249800487776200266311444210000000000005653999865587620970012355544421000000000000089994001399631236951127743765530077535664000453012043210000000000000148997410002877469740057711542210000661004554000007640000110000000000000003988997000000017400055343100000000000046655566654320000000000248101575321000000002676200067200244300000451002102332110000000666410066565100154115423554310000000157621136200453111000000000000000039668469600016575300045100034430014775311000000000000008963000000057510146666354310003445322256444542224213321100000000000000002898666772198200037534411000000057876335300465114655652136741006400003431100000078740366303642187500353024544554430024200266400244535633430033212100000000000007999778831000875200157510477010037624750002531000046765235521166664343124311310000000000000589960001984002798600066667476007844566500115551002453100000000000000049862017743268752215987577876661000554400037521142000542220000000000000166359962256543327602765433221000000000000569995676326984005642004445444442000444433110014443222233221110000000000488632156544554000024300344344433430034313333002321000121000000000000000059988888875410035650004857767736401666300036854345432000045420004500136520000530033311200000000000059997400487777310776520002761057201117762102966553000642221000000000000299999211387410011676677876650254200003831550005511455531034100000000000000005778970007774000694168101002776566678677735100665211055311000000123865660010345344045420046424420000000058840007976200354455640255200003667532544263015310034100000000000003999857776673386554200000266640000661039410115444400010443100000176640037547652103764455124310000054002675245544311341243223100000000000004779842477764589632675664302520005652000254321221100000000037347731246331132000553111541010343210001454200055110034421342144223332333221210100000000000000896026664000068500465556675663004653342100000000008933860010027500356651105640001200003655552005533543210000000034599516866630024544100046541000000001788532276456101001543002544455555010454335421223211000000000000004999852005665000038820016873267762100065310023597239437755520056202543213321000000000000000000599867887766776500056337540017544113320000000000000005644998743299850047621157422321100000000000002533368766663187621477521000001688753455550064344555111015536543011374111553125300343020242000000001693005774655100038435533322210000000000006996988533972203734576520004665500100005984667555411025245420253002432121000000000000441899886305300674456520010365442015551035432100000000048882023676511000000000005745642454226640010000001283016652004666543110000000058832762674551005650056545530004544110545444210000028874239510366236552035431124211000000000000000024894006993002134654200000126988820563520154211100000000000000111898775244775432344400003110000000026701683247993100000664310000354220000000026656663344443100011000000000000011475005763258654100156742000221100000000016755642324512413430000000051000565244310000442001553000000244455420045521100000000000266300000013664665224755100267421002211000000000125551035000054200033100000000000002487664598510013457766545562000005200132100000000000000008910035895000485011453210000000136700157875200037853103653464543111000000000000000498446977630067765666630065554444210010000019986655111004412610011133210000000159740055105630267200116321586100004520366400247653000000000059667641035455301552125401432221000000000049700116910573466775100023299766650018423654400000365545545630000552123210000000000069710088666500010585058762001763555555511077300007731005750057651000004641232100000000000000"}, {"id": "m2", "title": "Recommend with Reasons", "sub": "Programmes, Aptitude and Career Discovery", "cast": ["neha", "rajesh", "aarav"], "segs": [{"who": "meera", "s": "Module two: Recommend with Reasons. Sahi programme woh hai jo student ko fit kare, na ki jiski fees sabse zyada ho.", "v": {"k": "title", "n": "02", "h": "Recommend with Reasons", "p": "Programmes, Aptitude and Career Discovery"}}, {"who": "arjun", "s": "Yeh hai programme map. Class 8 se 10: School preparation ya School plus Olympiads. Class 11 aur 12: JEE, NEET ya CUET. 12th pass outs ke liye, pichhla attempt review karke JEE ya NEET. Courses official exam eligibility ki jagah nahi lete, isliye current requirements hamesha confirm kijiye.", "v": {"k": "table", "h": "Programme map", "rows": [["Classes 8–10", "School · School + Olympiads", "Syllabus needs, gaps, appetite for challenge, time"], ["Classes 11–12", "JEE · NEET · CUET", "Interest, subjects, current preparation, workload"], ["12th pass out", "JEE or NEET", "Previous attempt, topic gaps, routine, stamina"]]}}, {"who": "meera", "s": "Ab dekhiye, Neha kaise Mr Gupta aur unke bete Aarav ko counsel karti hain, jo engineering ko lekar sure nahi hai.", "v": {"k": "title", "n": "Role play", "h": "Neha meets Mr Gupta and Aarav", "p": "An unsure student and a confused parent"}}, {"who": "rajesh", "s": "Mera beta Aarav Class 11 mein hai. Sab kehte hain JEE karo, lekin mujhe confusion hai.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Aarav, aapko engineering mein kya pasand hai? Aur abhi padhai ka routine kaisa hai?", "v": {"k": "dialog"}}, {"who": "aarav", "s": "Mujhe Maths achha lagta hai... par main sure nahi hoon ki engineering hi mere liye sahi hai.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Koi baat nahi. Sirf marks dekhkar preparation choose karna mushkil ho sakta hai. Aptitude se hum assessed strengths aur development areas samajhte hain. Career Discovery se interests aur career preferences par clarity milti hai.", "v": {"k": "dialog"}}, {"who": "rajesh", "s": "Toh yeh test bata dega ki woh engineer banega ya nahi?", "v": {"k": "dialog"}}, {"who": "neha", "s": "Nahi sir. Assessment ek starting point hai, koi guarantee ya permanent label nahi. Dono insights aapke saath discuss karke hum preparation aur next steps better plan karte hain. Decision aapke saath milkar lenge.", "v": {"k": "dialog"}}, {"who": "meera", "s": "Aptitude plus Career Discovery ko do lens ki tarah samjhaiye. Aptitude abhi ke assessed tasks par performance dikhata hai. Career Discovery khud ko samajhne ka ek structured starting point hai. Dono milkar preparation plan banate hain, koi faisla nahi sunaate.", "v": {"k": "lens"}}, {"who": "arjun", "s": "Boundaries yaad rakhiye. Kabhi mat kahiye ki test saabit karta hai ki bachcha doctor ya engineer banega. Kabhi mat kahiye ki kam score ka matlab hai woh us field mein nahi ja sakta. Aur complex interpretation qualified analyst ko refer kijiye.", "v": {"k": "compare", "h": "Boundaries", "do": ["Call it a starting point", "Explain the report's limits", "Refer complex reading to the analyst"], "dont": ["“This test proves you'll be a doctor”", "“Low score means you can't do it”", "Let one trait dictate a career"]}}, {"who": "neha", "s": "Aarav ki current class, subject gaps aur goal ko dekhte hue, main Aptitude aur Career Discovery ke saath JEE programme recommend karungi. Iska schedule aur support aapki zaroorat se match karta hai. Pehle aap dono ke questions clear kar lete hain.", "v": {"k": "dialog"}}, {"who": "meera", "s": "Achha recommendation ek option saaf batata hai, yeh batata hai ki doosra option abhi kyon kam suitable hai, aur workload aur feasibility cover karta hai. Taiyaar hain? Chaliye apni samajh check karte hain.", "v": {"k": "list", "h": "A strong recommendation", "items": ["Names one option clearly", "Explains why another fits less, for now", "Covers workload and feasibility", "Invites both student and parent questions"]}}], "timeline": [{"start": 0.4, "end": 9.189}, {"start": 9.639, "end": 35.066}, {"start": 35.516, "end": 43.882}, {"start": 44.332, "end": 52.176}, {"start": 52.626, "end": 58.494}, {"start": 58.944, "end": 65.869}, {"start": 66.319, "end": 83.336}, {"start": 83.786, "end": 88.4}, {"start": 88.85, "end": 106.521}, {"start": 106.971, "end": 126.258}, {"start": 126.708, "end": 146.482}, {"start": 146.932, "end": 163.725}, {"start": 164.175, "end": 178.845}], "dur": 179.295, "env": "0000000000399999534788963001874321000000000000277960058877652212399411595157532111000000000000000198599300799526565555347643542100000327964000046546552000562006500016534210000000068874007337410056100266400026300047613643134311310000000000000233997357650000049931658775544454211000000000000000000168767720000357410006622421100000000000000488620381048731153210000000136766500003678531003674000016776412554321100000000000000005756720002765646556300046310355422100000000003997642100000035886001474410034354310011000000000000012167775565377500444430000002466200003732211100000000047011266420003400377630033452572036310022100000000013887555422355444442100000000000000004999943000000016860055111465420000003741114532110000000000278466227326355004400033210005413445433335653331001000000000000172001368620000364675320000000000145005755643456630000023344300132100034310443220003410110000000000000005993311974000287641025666335300365421365456512036430063000044310000000038863036752047421876005651004444353000462001444453215420243100343222000000000215971037772136566653765420047545510253101111665344322432220000000000000046999576411179710342110000000013564574100003433441000000036444353343321001000000000000000000079300046452036632221000000001278755410164221000000000013398300465322356115740002644200025751353110100000000000000024777757730000056640002973003886237677673765566542001640044213544211320000000000000699962058532596007642356630155320000369630267661065522144312310000000000000367993599974546667500000000065000104655530006521110000000000000000000499841000036773111268721234457622541000003310000004741265576437643102110000000135885752355300221220110000000000000018998883267665002766346432100000000000001299630068887653000022199400004542100000029902686213766510016666210056445555555531005754255104200044322200000000000000899800039840003876300476325643210000016710077610023000266640000000057753221499636651016555300000179766765552000544401005422200000000000001997778773279110263566511164320000017997102487610000000267630026645665210016620166521066510044210000000487654620056665320044312200000000000000589843585000047752000000025105631354101110000000000004521467510000266631256555666310004534551133210001345532100100000000000000189999961279851118764433100000000000000007941159751105776520000595001110365541005553004655300033100000000089985127654555300555327543000564455445556400235522543332132100000000000004537998776400688610454456100100035540003750115444001147210063100553200332100000000497750159202597421464431000007885877762000000000007650002248643510564200355445402541004422310000000000000003646995100888526975541000027763000057501045443000057677530056534444322311000000000000399930007971001587410167621100067567764221572201635564001532000000334988656552100450254334421444311333221000000000000069991002997200158776320000795536940077600355111777210240155541001003431000000596203665576663101620134203332210000000000002997779874279220175467632000000012994200684115667411475015542000587200010015400146642100102654420066640254432001210000000000002422998766657778520047620000283016862215543004554455245344300443231000000001997610007552220344444423651214444310032000000000000002239878895658668310000002277665235450000211000000000000001883788754568500003532342110000000162000079961000000145236100153102542111000000000000541156000365521034610006731011354221000000016874147766873125443210110000000000001883679855685000035323321000000150005766400000478620147433520146511111100000000000177200840000027854223444100013544773155310020000200000000000002798400167640257600000001586206610252047731121000000000000276647400565443100000037766664474000003321000002268730273100242011100000000000000267764640006402755540000465432211000000011873238500021275520110366531037874005515530003641355320000000027875100564000376200127663202564200563575421461101534561046312154320000000118966566200277414544552540016554104544431110000000000000891105874112598437877530000058952115600467730000045520003666313865666510006655544010043102432121000000000000996577774026666100322877666300665200004872201456422000467663004634443004422200000000000000793002125554810387765873215553000166100044300115662214432000440343103332310000000005993582045420344244310006423652103542002451011266520002553226500055410455531115530376335532320000000002788533487400376676655200000577300026742573494441054005335420044200232212000000000000003209999987774411654320000000000000003998677850075003788762111576667412400159710016520045323100000000000000"}, {"id": "m3", "title": "Demonstrate Value", "sub": "The personalised pitch", "cast": ["neha", "sunita"], "segs": [{"who": "arjun", "s": "Module three: Demonstrate Value. Families features ki list nahi khareedtin. Woh apni chinta ka jawaab khareedti hain.", "v": {"k": "title", "n": "03", "h": "Demonstrate Value", "p": "The personalised pitch"}}, {"who": "meera", "s": "Har baar yeh chain istemaal kijiye: student ki need, relevant strength, practical benefit, evidence, understanding check, aur phir admission invitation.", "v": {"k": "flow", "h": "The value chain", "steps": ["Student need", "Relevant strength", "Practical benefit", "Evidence", "Check understanding", "Invitation"]}}, {"who": "arjun", "s": "S Cubus ki kai strengths hain: small batches aur One Class One Batch, 9 AM se 9 PM academic support, mentor karne wale teachers, structured testing system, rigorous checking wali practice notebooks, AI student aur parent apps, aur transport aur hostel support. Lekin sirf woh do ya teen chuniye jo family ki chinta se match karein.", "v": {"k": "cards", "h": "Our strengths, pick 2–3", "items": [["Small batches", "One Class One Batch, closer attention"], ["9 AM – 9 PM support", "Doubt sessions till 9 PM"], ["Teachers who mentor", "Habits, discipline, guidance"], ["Structured testing", "DPPs, tests every 15 days, unit tests every 45"], ["Practice notebooks", "Rigorous checking by teachers"], ["AI apps", "Student and parent progress tools"], ["Aptitude + Career Discovery", "Strengths and interests"], ["Transport & hostel", "Cab, separate boys/girls hostels"]]}}, {"who": "sunita", "s": "Meri beti ke doubts clear nahi hote, aur mujhe pata nahi chalta ki woh practice kar rahi hai ya nahi.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Aapki main concern regular practice aur doubts ka timely solution hai. S Cubus mein small batches hain, aur 9 AM se 9 PM academic support, jismein 9 PM tak doubt sessions hote hain.", "v": {"k": "dialog"}}, {"who": "neha", "s": "DPPs, har 15 din tests aur checked practice notebooks se preparation regularly review hoti hai. Aur parent app par aap progress dekh sakti hain.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Yeh timetable aur yeh sample checked notebook dekhiye. Kya yeh support aapki need se match karta hai?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Arre haan, yeh notebook checking toh achhi lagi! Test ka calendar bhi dikha dijiye.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Zaroor. Agar programme, timing aur fee terms suitable hain, toh admission process aage badhate hain.", "v": {"k": "dialog"}}, {"who": "meera", "s": "Yeh hai observer checklist. Kya counsellor ne koi specific concern pehchaana? Kya strengths ko practical benefit se joda? Kya timetable, sample, demo ya process dikhaya? Aur next step se pehle samajh check ki?", "v": {"k": "list", "h": "Observer checklist", "check": true, "items": ["Named a specific student or parent concern", "Connected strengths to practical benefits", "Showed a timetable, sample, demo or process", "Checked understanding, asked for a next step"]}}, {"who": "arjun", "s": "Har promise ke peeche ki service dikhaiye. Small batches bataiye, lekin bina confirm kiye koi number mat boliye. Aur faculty ki purani achievements ko S Cubus ke institutional results se alag rakhiye. Ab quiz lijiye.", "v": {"k": "compare", "h": "Credible claims", "do": ["Show timetable, notebook, app demo", "Name the support process and owner", "Separate faculty and institute results"], "dont": ["Quote an unconfirmed batch size", "Recite every feature", "Claim ranks without approved evidence"]}}], "timeline": [{"start": 0.4, "end": 10.162}, {"start": 10.612, "end": 21.843}, {"start": 22.293, "end": 51.603}, {"start": 52.053, "end": 58.999}, {"start": 59.449, "end": 74.298}, {"start": 74.748, "end": 84.904}, {"start": 85.354, "end": 92.678}, {"start": 93.128, "end": 98.847}, {"start": 99.297, "end": 106.017}, {"start": 106.467, "end": 122.732}, {"start": 123.182, "end": 141.15}], "dur": 141.6, "env": "000000000026799953359995101143311000000000000001249986776631000469961000124765211110000000000000069986774786420000000007401995400003644248500000123444662001453442000100000000000000027921630058982001378611766102421100000011197366562100002647851002321010000000000000001169862297665343686002786554310002843006766655541001552124310000000000001200786586640004766666543100000002497678336542011002553210000000004861000610466522355555400165200000000498378538655521100001677646411005554365540014643100000000787400103653001565456512355202553430354211231100000000000000599810004873598200047520001887651000277630111112100000000000000149910897216663038642000000000378432247665000355552001465531432100000000000000000006748888554467510166322455421000000000034766237347204520000014102773456600004101321000000000000000003569994058731000005953567764211454346500250143100000000000000000000210389100799643200002898200587731273002421000000000000000347936979872000001685001642110000000013777546740025630004620024456721023100000000000000001589888787510002664864310000001574100664775110013211000000000000000000699610258777210038854310000002675410367400076300510153211000000000000000136980038652000386200000000000279921158753224565000266551004643210000000000012773000265566446200343000025640155200442223451000220000000000000000579975874328964006640046531465234101100144444313344244312320011000000000007875445552256103510444334335410254320133100000025336620024430000541100343113322431232213332111001000000000000027875000079778776610476621055555200024995178555210014642000454200000000006784221565451010014420035444555611135434421134321310000000000000005999601002873386100666620110563036721654102762001321000000005896200083452455545400565244443000455542453166103420000016720068546651000430056544100000000000326931037675255444002555532642630342000001247554410000652113554100034103421310000000000000338923840076666210001376302766434345216655400665411000000000005996100158740000003654000373103555520045001125321000000029602576221555432377416755534456446314652144003322310000000000799630599678762000016663001766410355520004874358731038610121520004542330000000000000046898004966665119962674310000058855467411155420465410025762000025665540005300054100043100000000000000898776775112730067863000000016662000387753217764666651000665554450100531024321210000000000000389788533554311369755664222630001665102554420353044000010264332011100000000000000001079972100048620276665655466331215533114500135420554112221000000000000003299957988774242000000000004844873002997245655432000000076666667753005652000553100046545400004302662454223100000000570277356732165520265200663100244317515422330043121000000000000057998457640027744427875346530003961005653110000000000000009974005852577411556664366543200000004997751110587114403700036552136455044342035333210000000000000998732100588750011006642000047740006303766533328776750067101264134433200000000000000029864005766664068835753200000021776302765300013298766675654002653114661003400113321100000000000089987988761010551007871011740554555543100000158777622200375200015321000000000000000499740002688678830002432100000017730129610255400065326731026100243110000000000000000128810387300004653016741004401542100000000000023870027653105556641015310253310033221000000000598654434554375223540000256311100000000000001799630003751057410463003520015455654443210000034004643456740000011000000000002793000016625720015431000003785000620003541125543210000000001277239752000004331000025565132320001100000000000000048993100014999831000344995223321100000000000000"}, {"id": "m4", "title": "Objections & Closing", "sub": "Handle concerns, ask for a decision", "cast": ["neha", "rajesh"], "segs": [{"who": "meera", "s": "Module four: Objections and Closing. Objection aksar ek chhupa hua sawaal hota hai. Use respect ke saath handle kijiye, aur phir saaf decision ke liye poochhiye.", "v": {"k": "title", "n": "04", "h": "Objections & Closing", "p": "Handle concerns, ask for a decision"}}, {"who": "arjun", "s": "Paanch moves yaad rakhiye: bina toke suniye. Concern ko acknowledge kijiye. Ek clarifying sawaal poochhiye. Relevant evidence ke saath jawaab dijiye. Phir check kijiye ki concern solve hua ya nahi.", "v": {"k": "flow", "h": "Five moves for any objection", "steps": ["Listen", "Acknowledge", "Ask one question", "Respond with evidence", "Check resolved"]}}, {"who": "rajesh", "s": "Aapki fees bahut zyada hai. Doosre institute kam fees mein wahi course de rahe hain.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Aapka sawaal bilkul sahi hai. Aap kis option se compare kar rahe hain? Delivery, tests aur support ko same basis par compare karte hain. Main full fee terms clear kar deti hoon.", "v": {"k": "dialog"}}, {"who": "rajesh", "s": "Theek hai. Lekin kya aap rank ki guarantee dete hain?", "v": {"k": "dialog"}}, {"who": "neha", "s": "Rank guarantee nahi kar sakte. Hum teaching, practice, testing aur support ka process, aur verified results explain kar sakte hain.", "v": {"k": "dialog"}}, {"who": "rajesh", "s": "Hmm... humein thoda sochne ka time chahiye.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Bilkul. Kaunsi information decision ke liye pending hai? Usko clear karke kal aapke preferred time par baat kar lein?", "v": {"k": "dialog"}}, {"who": "meera", "s": "Yeh jawaab taiyaar rakhiye. Agar pehle se coaching hai, toh poochhiye wahan kya achha chal raha hai aur kya abhi bhi unresolved hai. Agar bachcha sure nahi hai, toh discovery kijiye, pressure kabhi nahi. Agar sirf discount chahiye, toh pehle sahi programme confirm kijiye, phir written conditions ke saath authorised options check kijiye.", "v": {"k": "table", "h": "Objection playbook", "rows": [["“Fees are high”", "Ask what they compare with; compare on the same basis", "Never jump to a discount"], ["“Already in coaching”", "What works there, what is unresolved?", "No gap, no change"], ["“Need time”", "Which information is pending?", "Agree a follow-up time"], ["“Guarantee a rank?”", "No guarantee; explain process and verified results", "Never promise ranks"], ["“Child is unsure”", "Discovery and exploration", "No pressure"], ["“Only want discount”", "Programme first, then authorised options", "Written conditions"]]}}, {"who": "arjun", "s": "Chaar professional closes hain: direct invitation, suitable options mein choice, bache hue concern ko solve karna, ya ek agreed next step. Buying signals poochhne ka mauka hain, consent maan lene ki permission nahi.", "v": {"k": "cards", "h": "Four professional closes", "items": [["Direct invitation", "“Kya hum admission process aage badhayein?”"], ["Choice of options", "“Aapke schedule ke liye kaunsa batch workable hai?”"], ["Resolve the concern", "“Kaunsa question abhi clear karna zaroori hai?”"], ["Agreed next step", "“Kal aapke preferred time par baat kar lein?”"]]}}, {"who": "meera", "s": "Sirf asli urgency istemaal kijiye, jaise confirmed batch start date. Kabhi bhi 'last two seats', nakli deadline ya guaranteed scholarship mat banaiye.", "v": {"k": "compare", "h": "Urgency: real or never", "do": ["Quote a confirmed batch start date", "State a verified seat position", "Give exact, confirmed facts"], "dont": ["“Only two seats left!”", "Invented expiry dates", "Guaranteed scholarship offers"]}}, {"who": "arjun", "s": "Aur aakhir mein, har baatcheet ek next action, ek owner aur ek tay time par khatam hoti hai. CRM mein stage, need, objection aur contact preference record kijiye. Follow up mein nayi information dijiye, baar baar 'admission kab lenge' wali calls nahi.", "v": {"k": "flow", "h": "CRM lead stages", "steps": ["Enquiry", "Connected", "Visit scheduled", "Counselled", "Considering", "Admitted"]}}], "timeline": [{"start": 0.4, "end": 10.428}, {"start": 10.878, "end": 27.73}, {"start": 28.18, "end": 35.189}, {"start": 35.639, "end": 50.211}, {"start": 50.661, "end": 55.087}, {"start": 55.537, "end": 64.956}, {"start": 65.406, "end": 69.845}, {"start": 70.295, "end": 79.308}, {"start": 79.758, "end": 102.679}, {"start": 103.129, "end": 121.257}, {"start": 121.707, "end": 132.912}, {"start": 133.362, "end": 152.678}], "dur": 153.128, "env": "0000000000499999423787751004764332100000000004995417971021877510026300127653000476100115305553256654300363454454214510432121000000000000796039883683100277300001771005544100025555552002662145321000000069951011584200365430012484004662565520663345540003430110321000000000000048678850101456998420000012386665245450001311000000000000002339978886400007951068400055332110000000000000000698721595662035443000000583015785688310000561111100000000000000049991001000467777820367654321000000056366654200254011121000000000000000143795599638875200000000059458468761000551002532200000000011573556731110036410110000000000000179941001688610000001672244311000000430016754006645420003665431102355530113565321011000000000000003687100058400068543000000001227955881011137664244211100000000000000001118883013787300047640005400016531000000000069543000055410022111000000001477674000267843100266332122101000000000000004788740004775010485366555520234995103962116425542331000000000000000047888700007971100036640012187762106643100004777603987864201662343254232100000000000000454998799736686530000898720000000000788420005500266630000465110065432200000024699500462100365300155553046556532025420024322210000000000000002899985002996300047666110000004985664110047766310037742065400544125210000000000000310239995214575321100000000000001459950066540033210000000146750000002267763000035211455456520156125410121000000000000000006699875200213987565520365544555267104652223400003200000000000005978710781025887552000004686400047631000000004986100476531056631116201566300035102554110554311000000002888533877464005544551248525655300000166001002555530553112400024323200000000000001311699766666532210000000000000000012586699840001578432100000000001795000367400443310000444665420025331011110000000000000007857997400159975432000000000001999866411156520047761047645666221443221000001289600066416553047334554005542354310221000000000006972103950026778730066430055320000000498763015553000376003762036641000544556404543144440002532321000000000000037799514972576555100007766655543255000034311000000000000017945983028546567321751037610156663242100000000940046601217652542453004441004500010244001555434323332310000000058940017541004632247412464200256645732544321211310000000000006962886331773001665411106664454534874241100000006736922015354640004641135643100000488411552004521265433132100000000000000289359841118963001359210265555100164432454100000000660374355663114535630027741454453035441035445200465114542100000000299545930465640565546311255531004631124432000000000376001254457732011000540001155651100156300000553023310000000000000001876676410000269720478311465554200000478622766310011000000000000000032198888868740001000027864771276311131100000000000000010287399948975200000591000158762004662016431110000000000000000122499004998334653310000001876400755510465200004665321016521211000000000000003489872004895000000594376872235567500000004311000000000000000115888974000003511346653100000001560102550054344630252111000000000017653002776100000234566543224545650003300054334411254322101100000000000000016996200276110367410476316976004653100740006666555530005741354310000000235985006600465510454445315544001002544310002653200000000000000000069533893225875566555310000046540100654300010000000268700046751876214554443321000000039865104655452025553211100454453111530045500035443332210000000000000268841003554018844421100000000006642145550001455100036300344565000000252011132100000000000279200002688677631000034541000474000054444100144456420342100140025422420131010000000000000000388887677655576510000642100000000000025688753100000001631129710115653000045410004555105651000002540035551000125102675200004411110000000000000000289767203500047764435543100000001673004643467511154410015621121000000000000105556421154221000000385235721143200000461122254422553102332352000355300012100000000000000000"}, {"id": "m5", "title": "The Master Pitch", "sub": "Research-backed consultative selling", "cast": ["neha", "rajesh", "sunita"], "segs": [{"who": "arjun", "s": "Bonus module: The Master Pitch. Yeh sab kuchh ek saath laata hai, consultative selling ki proven research ke saath.", "v": {"k": "title", "n": "05", "h": "The Master Pitch", "p": "Research-backed consultative selling"}}, {"who": "meera", "s": "Teen findings is pitch ko banaati hain. Neil Rackham ki 35,000 sales calls ki study, jis par SPIN Selling bani, batati hai ki top performers kahin zyada implication questions poochhte hain. Gong ka analysis batata hai ki jeetne wale kam bolte hain. Aur LAER model sikhata hai ki jawaab dene se pehle objection ko explore kijiye.", "v": {"k": "cards", "h": "What the research says", "items": [["SPIN Selling", "Rackham, 35,000 sales calls: top sellers ask more Implication questions"], ["Talk less", "Gong: ~57% talk in won deals vs ~62% in lost"], ["LAER", "Listen, Acknowledge, Explore, Respond"]]}}, {"who": "arjun", "s": "SPIN ka matlab hai Situation, Problem, Implication aur Need-payoff questions. Families ke saath implication question sabse powerful hai: agar yeh gap board exams tak raha, toh kya hoga?", "v": {"k": "flow", "h": "SPIN for admissions", "steps": ["Situation: how are studies going?", "Problem: where is it hard?", "Implication: what if it continues?", "Need-payoff: what would change?"]}}, {"who": "neha", "s": "Gupta ji, abhi Aarav ki padhai kaise chal rahi hai, aur doubts kaise solve hote hain?", "v": {"k": "dialog"}}, {"who": "rajesh", "s": "School aur tuition dono chal rahe hain, lekin Physics mein marks gir rahe hain.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Agar yeh gap Boards aur JEE tak aise hi raha, toh uske confidence aur baaki subjects par kya asar padega?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Haan, yahi toh darr hai! Woh ab sawaal poochhne mein bhi jhijhakta hai.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Agar use har din doubt clear karne ka bharosemand raasta mile, toh aapke liye kya badlega?", "v": {"k": "dialog"}}, {"who": "sunita", "s": "Humein sukoon rahega, aur woh khud apni padhai sambhaal paayega.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Toh aapki zaroorat hai bharosemand doubt support aur practice ki visibility. S Cubus mein small batches hain, jahan jhijhakne wale student ko bhi teacher ka attention milta hai. 9 PM tak doubt sessions hain, aur har 15 din test ke baad galtiyon par feedback milta hai.", "v": {"k": "dialog"}}, {"who": "neha", "s": "Yeh raha doubt session ka timetable aur ek sample checked notebook. Ismein aapka koi sawaal reh gaya hai?", "v": {"k": "dialog"}}, {"who": "rajesh", "s": "Nahi nahi, samajh aa gaya! Documents kya lagenge?", "v": {"k": "dialog"}}, {"who": "neha", "s": "Bahut achha sawaal hai! Agar programme, timing aur fee terms aapko suitable lag rahe hain, toh aaj admission process complete karte hain. Main documents aur next steps explain kar deti hoon.", "v": {"k": "dialog"}}, {"who": "meera", "s": "Buying signal par dhyaan dijiye: documents ke baare mein sawaal. Neha ne jawaab diya aur bina pressure decision ke liye invite kiya. Master pitch formula yeh hai: unke shabd dohraaiye. Implication uthaaiye. Payoff unhe khud kehne dijiye. 2–3 strengths match kijiye. Proof dikhaiye. Phir check kijiye aur invite kijiye.", "v": {"k": "list", "h": "The master pitch formula", "items": ["Mirror their words", "Raise the implication", "Let them say the payoff", "Match 2–3 strengths", "Show proof", "Check, then invite"]}}, {"who": "arjun", "s": "Aadhe se kam time boliye. Achhe sawaal poochhiye. Aur jo saabit nahi kar sakte, uska vaada mat kijiye. Yahi bharosa admission mein badalta hai. Final quiz lijiye aur scoreboard par apni jagah dekhiye.", "v": {"k": "title", "n": "Remember", "h": "Trust turns into admissions", "p": "Talk less · Ask better · Prove everything"}}], "timeline": [{"start": 0.4, "end": 8.88}, {"start": 9.33, "end": 34.03}, {"start": 34.48, "end": 49.378}, {"start": 49.828, "end": 55.343}, {"start": 55.793, "end": 61.698}, {"start": 62.148, "end": 69.828}, {"start": 70.278, "end": 75.022}, {"start": 75.472, "end": 81.805}, {"start": 82.255, "end": 86.403}, {"start": 86.853, "end": 105.91}, {"start": 106.36, "end": 113.651}, {"start": 114.101, "end": 118.001}, {"start": 118.451, "end": 131.074}, {"start": 131.524, "end": 157.72}, {"start": 158.17, "end": 174.428}], "dur": 174.878, "env": "0000000000122999789510035784245542111000000000002329988767778400187300531000000000000003895003862100048100000000473000035640023441053111000000000387500863028710672100056437653101321000000597477620124410276100044000321000000000000000009999751006866675677664110000496210196020067357455410444222100000000000039999976536754002365540172035441045511035315544310106554110015544110046110035523311000000002279410036631110067554101166545666524544321000000000378106653025623420000007300676400002662005535555311015447721654413321000000168613660057511355430005751002552100341110243121000000000000352299766500046541005887655566512174200540254302442242100000000783136610056742544445610045553136542003431210000000000000039997576876775467655546521141013410443232100000000068349525555121187565611055400154344553002422037401215554005310000004740021300366520001551123210000000000000000099750485555004477221121000000000000750037774115533100000000357862244322100000048601460047521153320000026833446766210025555630000364100021000000000000000000798779856867510004730003643110000000000003884025710476213554000576300043220000003730003640025543652003421010000000000000003863996535972105766610000001116999410000463111565541003400232112000000000161016741354112100000000000000452594000187831476310000386434940045554540005500654235562006540075002654344156423200000000279743176554001002654006751104544200451044223000000000000000000478884300576300001564113421100000011688556630015654334223210100000000000137730046531000007522850000232210000000023466772000000027832342121001000000000000005972996668752186553001322788831000000256742116765555104420000045500562267343222100000000384461102650005655400476476552000000046753216544001661106321475000100454200025420003410352004434430231000000000000012389753235597525720675257653212210000000000000015699229932011585357655552000454010255555542114554211352134000132211100000000000005961994026311675125642110876762164454100001567652004524555003310000012236576511156555555413225441100445553321000000004940035440000474356640025412520245400310000000000000028667721155103665346435521431100000000587435820012652214400255400543223454301144442212343410243221010000000000000009705763000299522885767553000243100000033446674116556556534105445420113400455420000000028863001564100273100264266236246444000321000000000019997120028733961106766001116620576226540157511022000000001269535665212751133005664245444564110035536554000264111541000000564016530035310004512655112555554310343212000000000002589755002676634853760054001126455410124641215552210321000000016884225630056643345317665002877320000761344332100000013198730056400553100003664315543003553102332121000000000000258988634652576555000116751235540344300364556406652343210000002887205640011365410555200157500046553000641000000000000006971108997200466610005653000188774112742555564356343065432123100000000000004598778667434320000000475662110046203211100000000000022698100485678850000035431000357326632111000000000000001769964991000485001103662107546555433310000000000002782795100499416665433000000047666767865210566300025541100165455310034420005630015410675266545430444235323100000000491055555010047745762225541046520166200025443014200332120000000000039999629830058676652010000378657777400001200058720100560000046665036530542034213200000000000002639977864021292266650066520000011665556404652114541100000022696000066676640020049510544435555531144234321100000000000003899984235555666215832554300055432100000000488631494444300277412155311184112552265430174234543100016775234444100004321000000000000599997722007841007840110000476466667655444322210000000000001999970088712225883221420022198535645443321100000000000008998147950048762226766641002784012475443321000000000000007998996100027875476400015852100563456673055522243210000000000002647998001888765111035866300010066767730200475213431000000000000011999951023495011268765654210000000000000117993002985000038833687542000007995216874565554000046511332100000000000000368725896112654100004865530000645565421357522110000000000000792001129996100027536677652003661001211000000000000001799531139973000255424840000025667950066300240000210000000000660003664225442465444620000551011000000000000000249966763100136577720042100000000388224672115444566202533741014210100000000000000488777874000598310001247722221000000000037853000004794214776210033210000043002576211641356214310001000000000000000"}]};
+const QUIZ = {"m1": [{"q": "A mother calls about NEET coaching for her daughter. How should you use the first 5–7 minutes?", "o": ["Explain every programme and the fee structure", "Understand the enquiry with discovery questions", "Share topper results to build excitement", "Ask for the admission form"], "a": 1, "why": "Understand first. The opening minutes are for discovery; recommending comes only after you know the student's need."}, {"q": "Whom should you ask first about goals and difficulties?", "o": ["Only the parent, since they decide", "The student directly, then invite the parent's view", "Whoever speaks the most", "Nobody; recent marks are enough"], "a": 1, "why": "Ask the student directly, then invite the parent perspective. The counsellor must summarise both views before pitching."}, {"q": "Neha says: “Toh aapki priority… Kya maine sahi samjha?” Which step is this?", "o": ["Recommend", "Summarise and confirm understanding", "Close the admission", "Handle an objection"], "a": 1, "why": "Summarising and confirming shows the family they were heard and makes the later recommendation relevant."}, {"q": "According to Gong's analysis of recorded sales calls, how did seller talk time differ?", "o": ["Winners talked about 57%, losers about 62%", "Winners talked about 80% of the call", "There was no difference", "Losers talked less than winners"], "a": 0, "why": "Sellers in won deals talked less and used shorter monologues. Ask, pause, paraphrase."}, {"q": "Which of these is a discovery mistake?", "o": ["Asking which timings and travel are manageable", "Asking who is involved in the decision", "Assuming good Biology marks mean the student should take NEET", "Asking how the student resolves doubts today"], "a": 2, "why": "Marks, parental ambition or interest in one subject do not settle a career choice on their own."}], "m2": [{"q": "A Class 9 student wants better school results and has limited free time. What do you discuss first?", "o": ["The JEE programme", "The School programme, comparing School + Olympiads only if interest and workload allow", "The highest-fee programme", "CUET preparation"], "a": 1, "why": "Recommend what fits the need and feasibility. School plus Olympiads is an option only with interest and a manageable workload."}, {"q": "A father asks: “Will this test tell us if he'll become an engineer?” Best reply?", "o": ["Yes, it is very accurate", "It is a starting point, not a guarantee or permanent label; we'll discuss the insights together", "A low score means he should pick another field", "Change the topic to fees"], "a": 1, "why": "Never claim a test proves a career outcome. Explain the report's limits and decide together."}, {"q": "What does the Aptitude lens show?", "o": ["A personality type that fixes the career", "Performance on the assessed tasks at this point", "The student's future rank", "The parent's preferred stream"], "a": 1, "why": "Aptitude is a picture of current performance on assessed tasks; Career Discovery explores interests and preferences."}, {"q": "A 12th pass-out wants another NEET attempt. What should you understand first?", "o": ["Only the total score", "Previous attempt, topic gaps, score evidence, routine and willingness for another cycle", "Which coaching their friends joined", "Nothing; enrol immediately"], "a": 1, "why": "Look beyond the total score to topic gaps, routine and stamina before discussing programme fit."}, {"q": "Which makes a strong recommendation?", "o": ["Suggesting the most expensive option", "Naming one option, why another fits less now, and covering workload and feasibility", "Listing all programmes at once", "Promising a rank to build confidence"], "a": 1, "why": "A correct recommendation includes workload and feasibility, not just the highest-fee programme."}], "m3": [{"q": "What is the right order of the value chain?", "o": ["Feature → price → close", "Need → strength → benefit → evidence → check → invite", "Evidence → discount → close", "All strengths → fee → close"], "a": 1, "why": "Each explanation should show what the student will do and how the institute will follow through."}, {"q": "A parent says doubts never get cleared and she can't see if her daughter practises. Which strengths fit best?", "o": ["Transport and hostel", "9 AM–9 PM support with doubt sessions, tests every 15 days, checked notebooks and the parent app", "Every feature we have", "Our faculty's past institutes"], "a": 1, "why": "Pick the strengths that answer this family's concern: doubt support and progress visibility."}, {"q": "How many strengths should a personalised pitch include?", "o": ["All of them", "Two or three relevant ones", "Exactly one", "None; just share the brochure"], "a": 1, "why": "Present two or three relevant strengths rather than reciting every feature."}, {"q": "How should you describe small batches?", "o": ["“Only 10 students per batch”", "Describe small batches without quoting an unconfirmed number", "“Smallest batches in Delhi”", "Avoid mentioning batch size"], "a": 1, "why": "Never quote an unconfirmed numerical limit. Explain the approved batch structure."}, {"q": "Which is credible evidence for a support claim?", "o": ["“Trust me, we're the best”", "The timetable, a sample checked notebook, an app demo or a named process", "Complaints about competitors", "Teachers' earlier results presented as S Cubus results"], "a": 1, "why": "Show the service behind the promise. Keep faculty achievements separate from institutional results."}], "m4": [{"q": "What is the right sequence for handling an objection?", "o": ["Respond → close → listen", "Listen → acknowledge → ask one question → respond with evidence → check", "Acknowledge → discount → close", "Interrupt → explain → move on"], "a": 1, "why": "Listen without interrupting, acknowledge, clarify, respond with evidence and check the concern is resolved."}, {"q": "A father says “Your fees are too high.” Your best first move?", "o": ["Offer a discount straight away", "Ask which option he is comparing with, and compare on the same basis", "Say other institutes are poor", "Politely end the call"], "a": 1, "why": "Clarify the comparison and explain what the fee includes before discussing any authorised options."}, {"q": "“Can you guarantee a rank?” What do you say?", "o": ["“Yes, for hard-working students”", "“We can't guarantee a rank; here is our process and verified results”", "“Selection is guaranteed with full fees”", "Change the subject"], "a": 1, "why": "Never promise ranks. Explain teaching, practice, testing, support and verified results."}, {"q": "Which kind of urgency is acceptable?", "o": ["“Only two seats left” without checking", "A confirmed batch start date", "“This offer expires tonight” (invented)", "A guaranteed scholarship if they join today"], "a": 1, "why": "Use only genuine, confirmed facts. Invented scarcity breaks trust."}, {"q": "The family says “We need time.” What next?", "o": ["Call daily asking “admission kab lenge?”", "Ask what information is pending, resolve it, agree a follow-up time and record it in the CRM", "Push harder for today", "Mark the lead as lost"], "a": 1, "why": "Every interaction ends with a next action, an owner and an agreed time. Follow up with new information."}], "m5": [{"q": "What does SPIN stand for?", "o": ["Sell, Pitch, Insist, Negotiate", "Situation, Problem, Implication, Need-payoff", "Speak, Present, Inform, Note", "Score, Programme, Instalment, Next step"], "a": 1, "why": "Neil Rackham's SPIN model, from research on 35,000 sales calls."}, {"q": "Which is an implication question?", "o": ["“Aarav kis class mein hai?”", "“Agar yeh gap Boards aur JEE tak raha, toh confidence par kya asar padega?”", "“Fees kaise pay karenge?”", "“Kya aap brochure chahte hain?”"], "a": 1, "why": "Implication questions help the family see the consequence of the problem continuing."}, {"q": "What did Rackham's research find about top performers?", "o": ["They talk more than buyers", "They ask more implication questions", "They give discounts early", "They avoid questions"], "a": 1, "why": "Top performers asked far more implication questions than average performers."}, {"q": "The father asks “Documents kya lagenge?” What is this, and what do you do?", "o": ["An interruption; ignore it", "A buying signal: answer it and invite a decision without assuming consent", "A sign to raise the fee", "A reason to start the form without asking"], "a": 1, "why": "Buying signals are invitations to ask, never permission to assume consent."}, {"q": "Why ask a need-payoff question like “Agar roz doubt clear ho, toh kya badlega?”", "o": ["To fill time", "So the family states the value of solving the problem in their own words", "To change the topic to fees", "To test the parent's knowledge"], "a": 1, "why": "When families say the payoff themselves, your pitch connects to their own words."}]};
+const NAMES = {"arjun": "Arjun · Narrator", "meera": "Meera · Narrator", "neha": "Neha · Counsellor", "ananya": "Ananya · Student, Class 11", "rajesh": "Mr Rajesh Gupta · Parent", "aarav": "Aarav · Student, Class 11", "sunita": "Mrs Sunita Gupta · Parent"};
+
+/* ---------- characters ---------- */
+const LOOKS = {
+  neha:{skin:"#CF9877",hair:"#24150F",style:"long",top:"#400C4D",kind:"blazer",earrings:true},
+  priya:{skin:"#D7A07D",hair:"#1E1412",style:"bun",top:"#400C4D",kind:"blazer",bindi:true},
+  kavita:{skin:"#C88A66",hair:"#231512",style:"long",top:"#C7566A",kind:"kurta",bindi:true,dupatta:"#E9B7A6"},
+  ananya:{skin:"#D9A585",hair:"#1C1210",style:"pony",top:"#5C7FB0",kind:"tee",small:true},
+  rajesh:{skin:"#B97C5A",hair:"#3A3330",style:"side",top:"#7C8A96",kind:"shirt",glasses:true,mustache:true,grey:true},
+  aarav:{skin:"#C99474",hair:"#1A1210",style:"spiky",top:"#2F7A72",kind:"tee",small:true},
+  sunita:{skin:"#CF9473",hair:"#20140F",style:"long",top:"#8E3B5E",kind:"saree",bindi:true,dupatta:"#D9A5A0"},
+  arjun:{skin:"#C08562",hair:"#221714",style:"short",top:"#2C3E64",kind:"blazer",glasses:true},
+  meera:{skin:"#DCA986",hair:"#2A1712",style:"long",top:"#B76E79",kind:"blazer"}
+};
+function personSVG(key, uid, crop){
+  const L = LOOKS[key]; const s=L.skin, h=L.hair;
+  const shade = "rgba(0,0,0,.12)";
+  let back="", front="";
+  if(L.style==="long"){ back=`<path d="M52 104 Q50 40 100 38 Q152 40 148 104 L156 196 Q100 214 44 196 Z" fill="${h}"/>`; front=`<path d="M56 100 Q60 50 100 48 Q138 50 144 98 Q128 70 100 66 Q76 70 56 100Z" fill="${h}"/>`; }
+  else if(L.style==="bun"){ back=`<circle cx="100" cy="46" r="22" fill="${h}"/>`; front=`<path d="M55 104 Q56 52 100 50 Q144 52 145 104 Q136 72 100 68 Q66 72 55 104Z" fill="${h}"/>`; }
+  else if(L.style==="pony"){ back=`<path d="M138 70 Q176 90 160 160 Q150 130 140 110Z" fill="${h}"/>`; front=`<path d="M55 104 Q56 50 100 48 Q146 50 146 102 Q130 66 96 66 Q70 70 55 104Z" fill="${h}"/>`; }
+  else if(L.style==="spiky"){ front=`<path d="M56 100 Q52 52 80 48 L86 36 L96 46 L106 34 L114 46 L126 38 L128 52 Q150 62 144 100 Q134 70 100 68 Q70 70 56 100Z" fill="${h}"/>`; }
+  else if(L.style==="side"){ front=`<path d="M56 104 Q54 52 100 50 Q146 52 144 100 Q130 74 110 70 Q80 64 56 104Z" fill="${h}"/><path d="M60 92 Q64 70 84 64" stroke="#8C8480" stroke-width="5" fill="none" opacity=".7"/>`; }
+  else { front=`<path d="M56 102 Q54 50 100 48 Q146 50 144 102 Q136 70 100 68 Q66 70 56 102Z" fill="${h}"/>`; }
+  let body;
+  if(L.kind==="blazer") body=`<path d="M24 262 Q26 190 100 180 Q174 190 176 262Z" fill="${L.top}"/><path d="M84 180 L100 222 L116 180Z" fill="#fff"/><path d="M84 180 L100 222 L92 262 L70 196Z" fill="rgba(0,0,0,.18)"/><path d="M116 180 L100 222 L108 262 L130 196Z" fill="rgba(0,0,0,.18)"/>`;
+  else if(L.kind==="kurta") body=`<path d="M24 262 Q26 190 100 180 Q174 190 176 262Z" fill="${L.top}"/><path d="M88 180 Q100 200 112 180" fill="none" stroke="#F3D8C4" stroke-width="3"/><path d="M30 262 Q60 190 150 186 Q120 210 90 262Z" fill="${L.dupatta}" opacity=".9"/>`;
+  else if(L.kind==="saree") body=`<path d="M24 262 Q26 190 100 180 Q174 190 176 262Z" fill="${L.top}"/><path d="M120 184 Q70 210 60 262 L96 262 Q104 214 150 190Z" fill="${L.dupatta}"/><path d="M120 184 Q70 210 60 262" stroke="#E8C3B8" stroke-width="3" fill="none"/>`;
+  else if(L.kind==="shirt") body=`<path d="M24 262 Q26 190 100 180 Q174 190 176 262Z" fill="${L.top}"/><path d="M84 180 L100 200 L116 180 L112 176 L100 190 L88 176Z" fill="#fff" opacity=".7"/><line x1="100" y1="200" x2="100" y2="262" stroke="rgba(0,0,0,.2)" stroke-width="2"/>`;
+  else body=`<path d="M28 262 Q30 192 100 182 Q170 192 172 262Z" fill="${L.top}"/><path d="M86 182 Q100 196 114 182" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="4"/>`;
+  const brow = L.grey? "#4A4442": h;
+  return `<svg class="p-svg" viewBox="${crop?"34 34 132 150":"0 0 200 262"}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    ${back}${body}
+    <rect x="86" y="146" width="28" height="40" rx="10" fill="${s}"/><rect x="86" y="160" width="28" height="12" fill="${shade}"/>
+    <ellipse cx="56" cy="112" rx="8" ry="12" fill="${s}"/><ellipse cx="144" cy="112" rx="8" ry="12" fill="${s}"/>
+    <ellipse cx="100" cy="108" rx="44" ry="52" fill="${s}"/>
+    ${front}
+    <path d="M76 96 Q85 90 93 95" stroke="${brow}" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <path d="M107 95 Q115 90 124 96" stroke="${brow}" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <g class="eyes"><ellipse cx="85" cy="108" rx="7.5" ry="5.4" fill="#fff"/><ellipse cx="115" cy="108" rx="7.5" ry="5.4" fill="#fff"/>
+    <circle cx="86" cy="108.5" r="3.9" fill="#2A1A14"/><circle cx="116" cy="108.5" r="3.9" fill="#2A1A14"/><circle cx="87.4" cy="107" r="1.2" fill="#fff"/><circle cx="117.4" cy="107" r="1.2" fill="#fff"/></g>
+    ${L.glasses?`<g fill="none" stroke="#3A2A2A" stroke-width="2.4"><rect x="73" y="99" width="24" height="18" rx="6"/><rect x="103" y="99" width="24" height="18" rx="6"/><path d="M97 106 L103 106"/></g>`:""}
+    <path d="M100 112 Q96 126 99 128 Q102 129 105 127" stroke="rgba(0,0,0,.22)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <circle cx="76" cy="126" r="7" fill="#E07A7A" opacity=".18"/><circle cx="124" cy="126" r="7" fill="#E07A7A" opacity=".18"/>
+    ${L.bindi?`<circle cx="100" cy="92" r="2.6" fill="#B23A48"/>`:""}${L.earrings?`<circle cx="55" cy="126" r="3.2" fill="#E3B58F"/><circle cx="145" cy="126" r="3.2" fill="#E3B58F"/>`:""}
+    ${L.beard?`<path d="M64 124 Q66 160 100 164 Q134 160 136 124 Q130 150 100 152 Q70 150 64 124Z" fill="${h}" opacity=".55"/>`:""}
+    ${L.mustache?`<path d="M86 136 Q100 128 114 136 Q100 134 86 136Z" fill="#3E3532"/>`:""}
+    <path d="M89 139 Q100 145 111 139" stroke="#8A3A44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse class="mouth" id="mouth-${uid}" cx="100" cy="141" rx="8" ry="0" fill="#5E1F2C"/>
+  </svg>`;
+}
+
+/* ---------- state ---------- */
+const MODS = DATA.videos;
+const LS = {get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let progress = LS.get("scubus-academy-progress",{watched:{},best:{}});
+progress.attempts = progress.attempts||{}; progress.qres = progress.qres||{};
+let cur = null, audio = new Audio(), lastSeg = -1, ccOn = true, speed = 1.25;
+audio.preload="auto"; audio.preservesPitch=true;
+const $ = id=>document.getElementById(id);
+const fmt = t=>{t=Math.max(0,t|0);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+$("trainee").value = LS.get("scubus-academy-name","");
+$("trainee").addEventListener("change",e=>{LS.set("scubus-academy-name",e.target.value.trim());pushScore();});
+$("factMin").textContent = Math.round(MODS.reduce((a,m)=>a+m.dur,0)/60);
+
+/* ---------- module cards ---------- */
+function stars(p){return p==null?"":"★".repeat(Math.round(p/10))+"☆".repeat(5-Math.round(p/10))}
+function renderMods(){
+  $("mods").innerHTML = MODS.map((m,i)=>{
+    const b = progress.best[m.id];
+    const st = b==null ? (progress.watched[m.id]?'<span class="pill">Quiz pending</span>':(m.id==="m5"?'<span class="pill bonus">Bonus</span>':'<span class="pill">Not started</span>')) : (b>=40?'<span class="pill done">Passed</span>':'<span class="pill">Retake</span>');
+    return `<button class="mod${cur&&cur.id===m.id?" active":""}" data-i="${i}" type="button"><span class="num">0${i+1}</span><h3>${esc(m.title)}</h3><span class="meta">${esc(m.sub)} · ${fmt(m.dur)}</span><span class="st">${st}<span class="stars">${b!=null?stars(b):""}</span></span></button>`;
+  }).join("");
+  [...document.querySelectorAll(".mod")].forEach(b=>b.onclick=()=>{openModule(+b.dataset.i,true)});
+}
+
+/* ---------- stage building ---------- */
+const stage = $("stage");
+function fitStage(){const w=$("stageBox").clientWidth; stage.style.transform=`scale(${w/960})`;}
+new ResizeObserver(fitStage).observe($("stageBox"));
+
+const FACE_W = {};
+const FACE = {"neha": {"mx": 45.31, "sy": 48.38, "mw": 11.48, "jy": 54.25, "jrx": 13.02, "jry": 9.94, "open": 10.78}, "sunita": {"mx": 49.07, "sy": 47.12, "mw": 13.46, "jy": 52.86, "jrx": 15.25, "jry": 9.71, "open": 10.56}, "rajesh": {"mx": 48.35, "sy": 49.23, "mw": 12.02, "jy": 55.61, "jrx": 13.63, "jry": 10.8, "open": 11.99}, "aarav": {"mx": 44.26, "sy": 46.22, "mw": 10.33, "jy": 52.09, "jrx": 11.71, "jry": 9.93, "open": 10.23}, "ananya": {"mx": 45.28, "sy": 46.55, "mw": 12.01, "jy": 52.76, "jrx": 13.61, "jry": 10.51, "open": 10.51}};
+const PHOTO = {neha:{w:512,h:434},sunita:{w:428,h:435},rajesh:{w:544,h:444},aarav:{w:540,h:412},ananya:{w:477,h:400}};
+const MIC = `<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#400C4D"/><rect x="25" y="14" width="14" height="24" rx="7" fill="#E9C9BE"/><path d="M19 32a13 13 0 0 0 26 0" stroke="#E9C9BE" stroke-width="3" fill="none"/><path d="M32 45v6M25 51h14" stroke="#E9C9BE" stroke-width="3"/></svg>`;
+function avatarHTML(k){ return PHOTO[k] ? `<img src="photos/${k}_face.jpg" alt="">` : MIC; }
+function actor(k, left, h){ const P=PHOTO[k], f=FACE[k]; const w=Math.round(P.w*h/P.h);
+  const mask=`radial-gradient(ellipse ${f.jrx}% ${f.jry}% at ${f.mx}% ${f.jy}%, #000 62%, transparent 100%)`;
+  FACE_W["per-"+k]=f.mw*1.05; return `<div class="actor" id="per-${k}" style="left:${left}px;width:${w}px;height:${h}px" data-open="${(f.open*h/P.h).toFixed(2)}"><div class="rig"><img src="photos/${k}.webp" alt="">
+    <i class="mouthin" style="left:${f.mx}%;top:${f.sy}%;width:${f.mw}%"></i>
+    <div class="jaw" style="background-image:url(photos/${k}.webp);clip-path:inset(${f.sy}% 0 0 0);-webkit-mask-image:${mask};mask-image:${mask}"></div></div></div>`; }
+function officeHTML(m){
+  const c=m.cast[0]; let fam=m.cast.slice(1);
+  if(fam.includes("sunita")) fam=["sunita",...fam.filter(k=>k!=="sunita")];
+  let famHTML="";
+  if(fam.length===1){ const k=fam[0]; famHTML = k==="sunita"? actor(k,-40,500) : actor(k,-60,520); }
+  else { const [a,b]=fam; const hb=PHOTO[b].h>420?440:380; const wb=Math.round(PHOTO[b].w*hb/PHOTO[b].h);
+    famHTML = actor(a, a==="sunita"?-40:40, PHOTO[a].h>420?450:390) + actor(b, b==="rajesh"? 960-wb+40 : 960-wb-50, hb); }
+  const faces=ks=>ks.map(k=>`<img src="photos/${k}_face.jpg" alt="">`).join("");
+  return `<div class="office" id="office">
+    <div class="shot" id="shotC"><div class="cam" id="camC"><img class="bgimg" src="photos/bg_sign.jpg" alt="">${actor(c,470,430)}<div class="desk short"></div></div>
+      <div class="pip"><div class="pip-imgs">${faces(fam)}</div><span>Listening</span></div></div>
+    <div class="shot" id="shotP"><div class="cam" id="camP"><img class="bgimg" src="photos/bg_family.jpg" alt="">${famHTML}<div class="desk"><i class="paper">DOUBT TIMETABLE</i></div></div>
+      <div class="pip"><div class="pip-imgs">${faces([c])}</div><span>Listening</span></div></div>
+  </div>`;
+}
+function sceneHTML(v){
+  if(v.k==="title") return `<div class="t-scene"><div class="t-n${v.n.length>2?" word":""}">${esc(v.n)}</div><div class="t-line"></div><div class="t-h">${esc(v.h)}</div><div class="t-p">${esc(v.p)}</div></div>`;
+  if(v.k==="list") return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="i-list${v.items.length>4?" many":""}">${v.items.map((t,i)=>`<div class="i-item rev${v.check?" check":""}"><span class="bul">${v.check?"✓":i+1}</span>${esc(t)}</div>`).join("")}</div></div>`;
+  if(v.k==="flow"){ const long=v.steps.some(s=>s.length>16);
+    return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="f-row" style="${long?"flex-direction:column;align-items:flex-start;gap:10px":""}">${v.steps.map((s,i)=>`<div class="f-step rev">${i&&!long?'<div class="f-arr"></div>':""}<div class="f-box"${long?' style="min-width:560px;text-align:left"':""}><small>STEP ${i+1}</small>${esc(s)}</div></div>`).join("")}</div></div>`;}
+  if(v.k==="cards"){ const n=v.items.length; const cls=n===3?"n3":(n===4?"n4":"");
+    return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="c-grid ${cls}">${v.items.map(c=>`<div class="c-card rev"><b>${esc(c[0])}</b><span>${esc(c[1])}</span></div>`).join("")}</div></div>`;}
+  if(v.k==="stat") return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="s-row"><div class="s-box rev"><b>${esc(v.a[0])}</b><span>${esc(v.a[1])}</span></div><div class="s-box lose rev"><b>${esc(v.b[0])}</b><span>${esc(v.b[1])}</span></div></div><div class="s-src rev">Source: ${esc(v.src)}</div></div>`;
+  if(v.k==="compare"){ const its=[]; for(let i=0;i<3;i++){its.push(["do",v.do[i]]);its.push(["dont",v.dont[i]]);}
+    return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="cmp"><div class="cmp-col do"><h4>✓ Do</h4>${v.do.map(t=>`<div class="cmp-it rev" data-o="${v.do.indexOf(t)*2}">${esc(t)}</div>`).join("")}</div><div class="cmp-col dont"><h4>✕ Don't</h4>${v.dont.map(t=>`<div class="cmp-it rev" data-o="${v.dont.indexOf(t)*2+1}">${esc(t)}</div>`).join("")}</div></div></div>`;}
+  if(v.k==="table") return `<div class="i-scene"><div class="i-h">${esc(v.h)}</div><div class="tb${v.rows.length>4?" six":""}">${v.rows.map(r=>`<div class="tb-r rev"><b>${esc(r[0])}</b><span>${esc(r[1])}</span><span>${esc(r[2])}</span></div>`).join("")}</div></div>`;
+  if(v.k==="lens") return `<div class="i-scene"><div class="i-h">Two lenses, one plan</div><div class="lens" id="lens"><div class="lc a"><b>Aptitude</b><span>Performance on assessed tasks, at this point</span></div><div class="lc b"><b>Career Discovery</b><span>Interests, values and preferences</span></div><div class="mid">Together:<br>a preparation plan, not a verdict</div></div></div>`;
+  return "";
+}
+
+let sceneKey = null;
+function buildStage(m){
+  stage.innerHTML = `<div class="bgfx"><div class="orb" style="width:420px;height:420px;right:-120px;top:-160px"></div><div class="orb" style="width:240px;height:240px;left:-80px;bottom:-90px;animation-delay:-5s"></div><div class="orb" style="width:120px;height:120px;left:520px;top:40px;animation-delay:-9s;border-color:rgba(64,12,77,.15)"></div></div>
+   <div class="layer hide" id="lyOffice">${officeHTML(m)}</div>
+   <div class="layer" id="lyInfo"></div>
+   <div class="l3" id="l3"><i></i><div><b id="l3n"></b><span id="l3r"></span><span class="wave" id="wave"><i></i><i></i><i></i><i></i><i></i></span></div></div>
+   <div class="narr-name" id="narrName"></div>
+   <div class="narr hide" id="narr"></div>
+   <div class="brand"><img src="logo.png" alt=""><span>COUNSELLOR ACADEMY · MODULE ${MODS.indexOf(m)+1}</span></div>`;
+  sceneKey=null; fitStage();
+}
+
+function showSeg(i){
+  const m = cur, seg = m.segs[i];
+  const v = seg.v;
+  const isDialog = v.k==="dialog";
+  $("lyOffice").classList.toggle("hide",!isDialog);
+  $("lyInfo").classList.toggle("hide",isDialog);
+  if(!isDialog) $("l3").classList.remove("on");
+  const key = JSON.stringify(v);
+  if(!isDialog && key!==sceneKey){ $("lyInfo").innerHTML = sceneHTML(v); }
+  sceneKey = key;
+  // narrator bubble
+  const narrators = ["arjun","meera"];
+  const narr = $("narr"), nn=$("narrName");
+  if(!isDialog && narrators.includes(seg.who)){
+    if(narr.dataset.who!==seg.who){ narr.innerHTML = MIC; narr.dataset.who=seg.who; }
+    narr.classList.remove("hide"); nn.textContent="Voice-over · "+NAMES[seg.who].split(" · ")[0]; nn.style.opacity=1;
+  } else { narr.classList.add("hide"); nn.style.opacity=0; }
+  // dialog: cut between counsellor shot and family shot
+  if(isDialog){
+    m.cast.forEach(k=>{const el=$("per-"+k); if(el){ el.classList.toggle("talk",k===seg.who); el.classList.toggle("dim",k!==seg.who && k!==m.cast[0]); }});
+    const isC = seg.who===m.cast[0];
+    const l3=$("l3"); const nm=NAMES[seg.who].split(" · "); if($("l3n").textContent!==nm[0]){ l3.classList.remove("on"); void l3.offsetWidth; $("l3n").textContent=nm[0]; $("l3r").textContent=nm[1]||""; } l3.classList.add("on");
+    $("shotC").classList.toggle("on",isC); $("shotP").classList.toggle("on",!isC);
+    const el=$("per-"+seg.who);
+    if(el){ const cx = el.offsetLeft + el.offsetWidth/2; const dx=(480-cx)*0.35;
+      const cam = isC? $("camC") : $("camP");
+      cam.style.transition="none"; cam.style.transform = isC? "scale(1)" : `scale(1.01) translateX(${dx*0.15}px)`; void cam.offsetWidth;
+      cam.style.transition=""; cam.style.transform = isC? "scale(1.035)" : `scale(1.045) translateX(${dx*0.35}px)`; }
+  }
+  // captions
+  $("capWho").textContent = NAMES[seg.who];
+  $("capTxt").textContent = seg.s;
+  // cast highlight & transcript
+  document.querySelectorAll(".castm").forEach(c=>c.classList.toggle("speaking",c.dataset.k===seg.who));
+  document.querySelectorAll(".tl").forEach((t,j)=>t.classList.toggle("now",j===i));
+  const nowEl = document.querySelector(".tl.now"); if(nowEl){const tr=$("transcript"); const top=nowEl.offsetTop-tr.offsetTop; if(top<tr.scrollTop||top>tr.scrollTop+tr.clientHeight-40) tr.scrollTop=top-60;}
+}
+
+function animateReveal(seg, frac){
+  const items=[...$("lyInfo").querySelectorAll(".rev")];
+  if(!items.length) return;
+  const ordered = items.slice().sort((a,b)=>(+(a.dataset.o??items.indexOf(a)))-(+(b.dataset.o??items.indexOf(b))));
+  const n=ordered.length;
+  ordered.forEach((el,j)=>{ const th = (j/(n))*0.82; el.classList.toggle("on", frac>=th); el.classList.toggle("cur", frac>=th && (j===n-1 || frac<((j+1)/n)*0.82)); });
+  const lens=$("lens"); if(lens) lens.classList.toggle("on",frac>0.35);
+}
+
+let mouthEls = [];
+function tick(){
+  if(cur){
+    const t = audio.currentTime;
+    const tl = cur.timeline;
+    let i = tl.findIndex(s=>t<s.end+0.45); if(i<0) i=tl.length-1;
+    if(i!==lastSeg){ lastSeg=i; showSeg(i); }
+    const seg = tl[i]; const frac = Math.min(1,Math.max(0,(t-seg.start)/(seg.end-seg.start)));
+    animateReveal(cur.segs[i], frac);
+    // mouth
+    const e = +(cur.env[Math.floor(t*25)]||0);
+    const speaking = t>=seg.start && t<=seg.end && !audio.paused;
+    const who = cur.segs[i].who;
+    const spk = $("per-"+who);
+    document.querySelectorAll(".actor").forEach(act=>{
+      const rig=act.firstElementChild, on = act===spk && speaking;
+      const k = on ? e : 0;
+      act._s = (act._s||0)*0.55 + k*0.45;
+      const sm = act._s, ph = t*1.7 + (act.offsetLeft/97);
+      rig.style.transform = `translateY(${(-sm*0.35 + Math.sin(ph)*0.8).toFixed(2)}px) rotate(${(on? Math.sin(t*2.3)*0.45 + (sm-3)*0.06 : Math.sin(ph*0.6)*0.25).toFixed(3)}deg)`;
+      const d = Math.max(0, sm/9) * (+act.dataset.open || 6);
+      const jaw = rig.querySelector(".jaw"), mi = rig.querySelector(".mouthin");
+      if(jaw) jaw.style.transform = `translateY(${d.toFixed(2)}px)`;
+      if(mi){ mi.style.height = (d>1? d+1 : 0).toFixed(2)+"px"; mi.style.width = (FACE_W[act.id]*(0.78+Math.min(.22,d/40))).toFixed(2)+"%"; }
+    });
+    const bars=document.querySelectorAll("#wave i"); bars.forEach((bi,j)=>{ const v=speaking? Math.max(3, Math.min(18, e*2*(0.55+0.45*Math.abs(Math.sin(t*9+j*1.7))))) : 3; bi.style.height=v+"px"; });
+    const d = audio.duration||cur.dur;
+    $("fill").style.width = (t/d*100)+"%";
+    $("time").textContent = fmt(t)+" / "+fmt(d);
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+function setPlayIcon(){ $("playIco").innerHTML = audio.paused? '<path d="M6 4l14 8-14 8z"/>' : '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>'; $("playBtn").setAttribute("aria-label",audio.paused?"Play":"Pause"); }
+audio.addEventListener("play",()=>{setPlayIcon();$("startCard").hidden=true;$("endCard").hidden=true;});
+audio.addEventListener("pause",setPlayIcon);
+audio.addEventListener("ended",()=>{ progress.watched[cur.id]=true; LS.set("scubus-academy-progress",progress); renderMods(); $("endCard").hidden=false; buildQuiz(); });
+function play(){ audio.play().catch(()=>{}); }
+$("playBtn").onclick=()=>audio.paused?play():audio.pause();
+$("startCard").onclick=play;
+$("replay").onclick=()=>{audio.currentTime=0;play();};
+$("toQuiz").onclick=()=>{ $("quizSec").scrollIntoView({behavior:"smooth"}); };
+const SPEEDS=[1.25,1.5,1,0.9];
+$("speedBtn").onclick=()=>{ speed = SPEEDS[(SPEEDS.indexOf(speed)+1)%SPEEDS.length]; audio.playbackRate=speed; audio.defaultPlaybackRate=speed; $("speedBtn").textContent=speed+"×"; };
+audio.addEventListener("play",()=>{ if(audio.playbackRate!==speed) audio.playbackRate=speed; });
+audio.addEventListener("loadedmetadata",()=>{ audio.playbackRate=speed; audio.defaultPlaybackRate=speed; });
+$("ccBtn").onclick=()=>{ ccOn=!ccOn; $("caption").hidden=!ccOn; $("ccBtn").style.opacity=ccOn?1:.5; };
+function updFsBtn(){ const on = !!document.fullscreenElement || document.querySelector(".screen").classList.contains("fs"); $("fsBtn").textContent = on ? "Exit full screen" : "Full screen"; }
+function exitPseudo(){ const sc=document.querySelector(".screen"); sc.classList.remove("fs"); document.body.classList.remove("noscroll"); updFsBtn(); setTimeout(fitStage,60); }
+$("fsBtn").onclick=async()=>{
+  const sc=document.querySelector(".screen");
+  if(document.fullscreenElement){ try{ await document.exitFullscreen(); }catch(e){} return; }
+  if(sc.classList.contains("fs")){ exitPseudo(); return; }
+  let ok=false;
+  try{ const req = sc.requestFullscreen || sc.webkitRequestFullscreen; if(req){ await req.call(sc); ok = !!(document.fullscreenElement||document.webkitFullscreenElement); } }catch(e){ ok=false; }
+  if(!ok){ sc.classList.add("fs"); document.body.classList.add("noscroll"); }
+  updFsBtn(); setTimeout(fitStage,80);
+};
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && document.querySelector(".screen").classList.contains("fs")) exitPseudo(); });
+document.addEventListener("fullscreenchange",()=>{ updFsBtn(); setTimeout(fitStage,80); });
+function seekFromEvent(ev){ const r=$("bar").getBoundingClientRect(); const x=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)); audio.currentTime = x*(audio.duration||cur.dur); }
+$("bar").addEventListener("pointerdown",ev=>{ seekFromEvent(ev); const mv=e=>seekFromEvent(e); const up=()=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",up)}; addEventListener("pointermove",mv); addEventListener("pointerup",up); });
+$("bar").addEventListener("keydown",e=>{ if(e.key==="ArrowRight") audio.currentTime+=5; if(e.key==="ArrowLeft") audio.currentTime-=5; });
+
+function openModule(i, scroll){
+  const m = MODS[i]; cur = m; lastSeg=-1;
+  audio.pause(); audio.src = "audio/"+m.id+".mp3"; audio.playbackRate=speed;
+  $("pTitle").textContent = `Module ${i+1} · ${m.title}`; $("pSub").textContent = m.sub+" · "+fmt(m.dur);
+  buildStage(m);
+  $("startCard").hidden=false; $("endCard").hidden=true;
+  $("ticks").innerHTML = m.timeline.map(s=>`<div class="tick" style="left:${s.start/m.dur*100}%"></div>`).join("");
+  const people = [...new Set(m.segs.map(s=>s.who))];
+  $("cast").innerHTML = people.map(k=>`<div class="castm" data-k="${k}"><div class="av">${avatarHTML(k)}</div><div><b>${esc(NAMES[k].split(" · ")[0])}</b><span>${esc(NAMES[k].split(" · ")[1]||"")}</span></div></div>`).join("") + `<div class="note">AI-generated characters and voices. Role plays are in Hinglish with subtitles.</div>`;
+  $("transcript").innerHTML = m.segs.map((s,j)=>`<button class="tl" type="button" data-j="${j}"><i>${fmt(m.timeline[j].start)}</i><span><b style="color:var(--plum)">${esc(NAMES[s.who].split(" · ")[0])}:</b> ${esc(s.s)}</span></button>`).join("");
+  document.querySelectorAll(".tl").forEach(b=>b.onclick=()=>{audio.currentTime=m.timeline[+b.dataset.j].start; play();});
+  $("capWho").textContent="Ready"; $("capTxt").textContent="Press play to start the lesson. Subtitles appear here.";
+  showSeg(0);
+  renderMods(); buildQuiz();
+  if(scroll) $("playerSec").scrollIntoView({behavior:"smooth"});
+}
+
+/* ---------- quiz ---------- */
+let qs = null;
+function seeded(n,seed){ const a=[...Array(n).keys()]; let s=seed; for(let i=n-1;i>0;i--){ s=(s*9301+49297)%233280; const j=Math.floor(s/233280*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildQuiz(){
+  const m=cur; const qz=QUIZ[m.id];
+  $("qTitle").textContent = `Quiz · Module ${MODS.indexOf(m)+1}: ${m.title}`;
+  if(!progress.watched[m.id]){
+    $("quiz").innerHTML = `<div class="locked"><b style="color:var(--plum);font-size:18px">Watch the lesson to unlock the quiz</b><br>Five scenario questions follow the video. <button class="btn ghost" type="button" id="skipLock" style="margin-top:12px">I've watched it, unlock now</button></div>`;
+    $("skipLock").onclick=()=>{progress.watched[m.id]=true;LS.set("scubus-academy-progress",progress);renderMods();buildQuiz();};
+    return;
+  }
+  qs = {i:0, res:[], order: qz.map((q,k)=>seeded(q.o.length, 7+k*13+MODS.indexOf(m)*31))};
+  renderQ();
+}
+function renderQ(){
+  const m=cur, qz=QUIZ[m.id], k=qs.i;
+  const prog = qz.map((_,j)=>`<span class="${j<qs.res.length?(qs.res[j]?"ok":"bad"):(j===k?"cur":"")}"></span>`).join("");
+  if(k>=qz.length) return renderResult();
+  const q=qz[k], ord=qs.order[k];
+  $("quiz").innerHTML = `<div class="qtop"><span class="pill">Question ${k+1} of ${qz.length}</span><div class="qprog">${prog}</div></div>
+   <div class="qq">${esc(q.q)}</div>
+   <div class="opts">${ord.map((oi,j)=>`<button class="opt" type="button" data-oi="${oi}"><span class="k">${"ABCD"[j]}</span><span>${esc(q.o[oi])}</span></button>`).join("")}</div>
+   <div id="qwhy"></div>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const oi=+b.dataset.oi, ok = oi===q.a;
+    document.querySelectorAll(".opt").forEach(x=>{x.disabled=true; if(+x.dataset.oi===q.a) x.classList.add("right");});
+    if(!ok) b.classList.add("wrong");
+    qs.res.push(ok);
+    $("qwhy").innerHTML = `<div class="why"><b>${ok?"Correct. +10 points.":"Not quite."}</b> ${esc(q.why)}</div><div class="qfoot" style="margin-top:14px"><span class="note">Score so far: ${qs.res.filter(Boolean).length*10} / ${qz.length*10}</span><button class="btn" id="nextQ" type="button">${k+1<qz.length?"Next question":"See my score"}</button></div>`;
+    $("nextQ").onclick=()=>{qs.i++;renderQ();};
+    $("nextQ").focus({preventScroll:true});
+  });
+}
+function renderResult(){
+  const m=cur, n=QUIZ[m.id].length, pts=qs.res.filter(Boolean).length*10, max=n*10, pct=pts/max;
+  const prev=progress.best[m.id]; if(prev==null||pts>prev) progress.best[m.id]=pts;
+  progress.attempts[m.id]=(progress.attempts[m.id]||0)+1; progress.qres[m.id]=qs.res.map(x=>x?1:0);
+  LS.set("scubus-academy-progress",progress); renderMods(); renderMine(); pushScore();
+  const idx=MODS.indexOf(m), next=MODS[idx+1];
+  const C=2*Math.PI*54;
+  $("quiz").innerHTML = `<div class="score-big"><svg class="ring" viewBox="0 0 130 130"><circle cx="65" cy="65" r="54" fill="none" stroke="#F6E4E1" stroke-width="12"/><circle cx="65" cy="65" r="54" fill="none" stroke="${pct>=.8?"#2E7D5B":"#B76E79"}" stroke-width="12" stroke-linecap="${pct>0?"round":"butt"}" stroke-dasharray="${C*pct} ${C}" transform="rotate(-90 65 65)"/><text x="65" y="72" text-anchor="middle" font-family="Marcellus,serif" font-size="30" fill="#400C4D">${pts}</text></svg>
+   <div style="min-width:0"><h3 style="font-size:28px">${pct>=.8?"Module passed!":"Almost there"}</h3><p style="margin:6px 0 14px;color:var(--muted)">${pts} of ${max} points · best ${progress.best[m.id]}. ${pct>=.8?"You earned the module badge.":"Score 40 or more to pass. Review the lesson and retake."}</p>
+   <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="retake" type="button">Retake quiz</button>${next?`<button class="btn" id="nextM" type="button">Next: ${esc(next.title)}</button>`:""}<button class="btn rose" id="seeBoard" type="button">View scoreboard</button></div></div></div>`;
+  $("retake").onclick=buildQuiz;
+  if(next) $("nextM").onclick=()=>openModule(idx+1,true);
+  $("seeBoard").onclick=()=>$("boardSec").scrollIntoView({behavior:"smooth"});
+}
+
+/* ---------- scoreboard ---------- */
+function totals(best){ return MODS.reduce((a,m)=>a+(best[m.id]||0),0); }
+function badgeFor(total,passed){ if(passed>=5&&total>=230) return "Master Counsellor"; if(passed>=4) return "Expert Counsellor"; if(passed>=2) return "Skilled Counsellor"; if(passed>=1) return "Rising Counsellor"; return "Trainee"; }
+function renderMine(){
+  const t=totals(progress.best), passed=MODS.filter(m=>(progress.best[m.id]||0)>=40).length;
+  $("mine").innerHTML = `<h3>${esc(($("trainee").value||"").trim()||"Your progress")}</h3>
+   <div class="mtotal"><b>${t}</b><span style="color:var(--muted)">/ 250 points</span></div>
+   <div><span class="badge">★ ${badgeFor(t,passed)}</span></div>
+   ${MODS.map((m,i)=>{const b=progress.best[m.id];return `<div class="mrow"><span class="n">0${i+1}</span><div style="min-width:0"><div style="font-size:13px;margin-bottom:3px">${esc(m.title)}</div><div class="meter"><i style="width:${(b||0)*2}%"></i></div></div><span class="v">${b==null?"—":b+"/50"}</span></div>`}).join("")}`;
+}
+let db=null, uid=null, lbRows=[];
+function renderLB(){
+  if(!db){ $("lb").innerHTML = `<div class="empty">Loading the team scoreboard…</div>`; return; }
+  if(!lbRows.length){ $("lb").innerHTML = `<div class="empty">No scores yet. Finish any quiz and your name appears here for the whole team.</div>`; return; }
+  $("lb").innerHTML = `<div class="lbwrap"><table class="lb"><thead><tr><th>#</th><th>Counsellor</th><th>Modules passed</th><th>Badge</th><th style="text-align:right">Points</th></tr></thead><tbody>${lbRows.map((r,i)=>{const d=r.d;const p=Object.values(d.scores||{}).filter(v=>v>=40).length;return `<tr class="${r.id===uid?"me":""}"><td class="rk${i===0?" g1":""}">${i+1}</td><td>${esc(d.name||"Counsellor")}${r.id===uid?' <span class="pill">You</span>':""}</td><td>${p} / 5</td><td>${badgeFor(d.total||0,p)}</td><td class="pts">${d.total||0}</td></tr>`}).join("")}</tbody></table></div>`;
+}
+let pushing=false, pushAgain=false;
+const SUPA = "https://dqgwafdihafcttynfaea.supabase.co", SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxZ3dhZmRpaGFmY3R0eW5mYWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjEwOTMsImV4cCI6MjEwNTYzNzA5M30._n-FGaXFyi3c1NxBDI0-DFfUA2nyqFhmELFc1LJat28";
+function devId(){ let d=LS.get("scubus-academy-device",null); if(!d||!d.id||!d.token){ const r=()=>crypto.getRandomValues(new Uint8Array(16)); const hex=a=>[...a].map(x=>x.toString(16).padStart(2,"0")).join(""); const h=hex(r()); d={id:`${h.slice(0,8)}-${h.slice(8,12)}-4${h.slice(13,16)}-a${h.slice(17,20)}-${h.slice(20,32)}`, token:"tok_"+hex(r())+hex(r())}; LS.set("scubus-academy-device",d); } return d; }
+const DEV = devId(); uid = DEV.id; db = true;
+function hdrs(extra){ return Object.assign({"apikey":SKEY,"Authorization":"Bearer "+SKEY,"Content-Type":"application/json","x-device-token":DEV.token}, extra||{}); }
+async function loadBoard(){
+  try{
+    const r = await fetch(`${SUPA}/rest/v1/academy_scores?select=id,name,scores,attempts,qres,watched,total,updated_at&order=total.desc&limit=300`, {headers:hdrs()});
+    if(!r.ok) throw new Error(r.status);
+    const rows = await r.json();
+    lbRows = rows.map(x=>({id:x.id, d:{name:x.name, scores:x.scores||{}, attempts:x.attempts||{}, qres:x.qres||{}, total:x.total||0, updated:Date.parse(x.updated_at)}}));
+    const mine = lbRows.find(x=>x.id===uid);
+    if(mine){ const sc=mine.d.scores; let ch=false; for(const k in sc){ if(progress.best[k]==null||sc[k]>progress.best[k]){progress.best[k]=sc[k];progress.watched[k]=true;ch=true;} } if(!$("trainee").value&&mine.d.name){$("trainee").value=mine.d.name;} if(ch){LS.set("scubus-academy-progress",progress);renderMods();renderMine();} }
+    renderLB(); renderDash();
+  }catch(e){ $("boardNote").textContent="Couldn't reach the team scoreboard. Your scores are saved on this device."; }
+}
+async function pushScore(){
+  const name=($("trainee").value||"").trim().slice(0,60);
+  if(!Object.keys(progress.best).length) return;
+  if(!name){ $("boardNote").textContent="Add your name at the top of the page to appear on the team scoreboard."; return; }
+  if(pushing){pushAgain=true;return;} pushing=true;
+  const body={name, scores:progress.best, total:totals(progress.best), attempts:progress.attempts, qres:progress.qres, watched:Object.keys(progress.watched).filter(k=>progress.watched[k]), updated_at:new Date().toISOString()};
+  try{
+    let r = await fetch(`${SUPA}/rest/v1/academy_scores?id=eq.${uid}&select=id`, {method:"PATCH", headers:hdrs({"Prefer":"return=representation"}), body:JSON.stringify(body)});
+    let rows = r.ok ? await r.json() : [];
+    if(!rows.length){ r = await fetch(`${SUPA}/rest/v1/academy_scores`, {method:"POST", headers:hdrs({"Prefer":"return=minimal"}), body:JSON.stringify(Object.assign({id:uid, token:DEV.token}, body))}); }
+    if(r.ok){ $("boardNote").textContent="Best score per module counts. Your scores are on the team board."; loadBoard(); }
+  }catch(e){}
+  pushing=false; if(pushAgain){pushAgain=false;pushScore();}
+}
+renderMine(); loadBoard(); setInterval(loadBoard, 30000); $("csvBtn").hidden=false;
+
+$("startBtn").onclick=()=>{ LS.set("scubus-academy-name",$("trainee").value.trim()); renderMine(); pushScore(); const i=MODS.findIndex(m=>progress.best[m.id]==null); openModule(i<0?0:i,true); };
+renderMods(); openModule(0,false);
+
+/* ---------- objection bank ---------- */
+const OBJ = [["Fees and value", [["आपकी fees इतनी ज़्यादा क्यों हैं?", "Aapka sawaal bilkul sahi hai. Aap kis option se compare kar rahe hain? Main fees mein shaamil teaching, testing aur student support clear kar deta hoon: small batches, 9 AM–9 PM academic support, DPPs, har 15 din tests aur checked notebooks. Phir aap value same basis par compare kar sakte hain.", "Approved fee sheet with inclusions, test calendar, support timetable"], ["दूसरे institutes कम fees में वही course दे रहे हैं—आपको क्यों चुनें?", "Compare karna samajhdaari hai. Chaliye same points par dekhte hain: batch size, doubt support ka time, tests ki frequency, notebook checking aur parent updates. Jo aapke bachche ki need se match kare, wahi sahi choice hai.", "A neutral comparison sheet of observable factors; never criticise the other institute"], ["Same syllabus और same exam है, तो extra पैसे किस बात के?", "Syllabus same hai, par difference is mein hai ki bachcha roz kaise practice karta hai, doubts kab clear hote hain aur progress kaun track karta hai. Hamare yahan yeh process har din chalta hai. Main aapko ek sample checked notebook aur test analysis dikhata hoon.", "Sample checked notebook, a test analysis report"], ["आपकी fees में ऐसा क्या शामिल है जो बाकी जगह नहीं मिलता?", "Main sirf features nahi, aapki need ke hisaab se batata hoon. Aapki concern doubts thi, toh 9 PM tak doubt sessions aur mentoring. Progress ke liye parent app aur fortnightly tests. Aap baaki jagah bhi yahi points check kar lijiye.", "Strengths list mapped to the family's stated concern"], ["क्या कम fees वाले institute में मेरा बच्चा अच्छा नहीं कर सकता?", "Bilkul kar sakta hai; result bachche ki mehnat aur sahi support par depend karta hai. Hum yeh dekhte hain ki aapke bachche ko kis support ki zaroorat hai, aur kya woh hamare process se better milegi. Agar wahan sab theek chal raha hai, toh hum unnecessary change recommend nahi karenge.", "Discovery notes; honesty builds trust"], ["हमें कैसे पता चलेगा कि extra fees देना worthwhile है?", "Aap pehle mahine se dekh payenge: test results, checked notebooks aur parent app updates. Demo class aur sample reports abhi dekh lijiye, taaki aap evidence ke basis par decide karein.", "Demo class booking, sample parent-app report"], ["अगर हमारा budget limited है, तो आप क्या option देंगे?", "Main samajh sakta hoon. Pehle sahi programme decide karte hain, phir main authorised instalment ya scholarship options check karke written mein share karta hoon.", "Confirm current instalment plans and SATHII scholarship rules; never promise unapproved concessions"], ["आप कितना discount दे सकते हैं?", "Main authorised scholarship ya fee options check karunga. Pehle suitable programme aur written conditions clear kar lete hain, taaki aapko poori clarity rahe.", "Approved scholarship policy only; don't open with a discount"], ["क्या tests, study material, apps और doubt sessions के अलग charges हैं?", "Achha sawaal. Main aapko complete fee terms dikhata hoon: kya shaamil hai, kya alag hai, aur taxes agar applicable hain. Koi hidden charge nahi hona chahiye; sab written mein milega.", "Full fee sheet with inclusions, exclusions and taxes"], ["अगर admission के बाद programme suitable नहीं लगा, तो refund policy क्या है?", "Yeh poochhna zaroori hai. Hamari refund policy written mein hai; main abhi aapko exact terms padh kar sunata hoon aur copy share karta hoon.", "Current approved refund policy document"]]], ["Why S-CUBUS", [["आप बड़े coaching brands से अलग कैसे हैं?", "Bade brands ki apni strengths hain. Hamara focus personalised attention par hai: One Class One Batch, small batches, teachers jo mentor karte hain, aur notebook checking. Aap batayiye, aapke bachche ke liye sabse important kya hai?", "Batch structure, mentoring process; never disparage competitors"], ["बड़े institute को छोड़कर S Cubus में admission क्यों लें?", "Agar aapke bachche ko closer attention, daily doubt support aur regular feedback chahiye, toh hamara model use help karega. Main aapko process dikhata hoon; decision aapki need ke basis par lijiye.", "Timetable, doubt-session schedule, sample feedback"], ["Personalised attention तो सब कहते हैं—आप कैसे दिखाएँगे?", "Sahi baat hai, kehna aasaan hai. Isliye main dikhata hoon: checked notebook par teacher ke comments, test ke baad individual feedback, aur mentor meeting ka process. Demo class mein aap khud dekh sakte hain.", "Checked notebook with comments, mentoring schedule, demo class"], ["‘One Class, One Batch’ का मेरे बच्चे को क्या फायदा होगा?", "Iska matlab hai ki bachcha ek hi consistent batch aur teachers ke saath padhta hai, toh teacher uski progress ko closely jaante hain aur continuity bani rehti hai.", "The approved operational definition of One Class One Batch"], ["Small batch होने से learning में क्या practical difference आएगा?", "Small batch mein bachcha zyada sawaal pooch pata hai, teacher har student ki galtiyan notice karte hain, aur interaction badhta hai. Main exact batch structure aapko dikhata hoon.", "Batch structure; never quote an unconfirmed number"], ["आपकी faculty का experience और results हम कैसे verify करें?", "Main aapko faculty profiles dikhata hoon: teacher, institution, period aur result clearly likha hai. Sirf verified information share karte hain.", "Faculty profiles with documented evidence"], ["ये results S Cubus के हैं या teachers के previous institutes के?", "Bahut achha sawaal. Hum dono ko alag rakhte hain: teachers ki earlier achievements alag, aur S Cubus ke institutional results alag. Main dono clearly dikhata hoon.", "Separate lists: faculty past results vs S-CUBUS verified results"]]], ["Teaching and student support", [["मेरे बच्चे के basics कमजोर हैं—क्या वह batch के साथ चल पाएगा?", "Yeh concern samajh mein aata hai. Pehle hum assessment se gaps dekhte hain, phir doubt sessions, practice notebooks aur mentoring se basics strong karte hain. Kaunse topics mein sabse zyada dikkat hai?", "Aptitude assessment, doubt-session timetable"], ["अगर class में समझ नहीं आया, तो दोबारा कौन समझाएगा?", "Teachers subah 9 se raat 9 tak available hain, aur 9 PM tak doubt sessions hote hain. Bachcha subject teacher ke paas jaata hai; zaroorat ho toh mentor follow up karte hain.", "Doubt route: named contact, times and escalation"], ["9 PM तक doubt support का मतलब क्या है—teacher कब और कैसे मिलेंगे?", "Main aapko exact doubt-session timetable dikhata hoon: kaunse subject ka teacher kab available hai, aur bachcha kaise slot leta hai.", "Teacher and doubt-session timetable"], ["मेरा बच्चा सवाल पूछने में झिझकता है—आप उसकी मदद कैसे करेंगे?", "Bahut bachche aise hote hain. Small batch mein teacher khud check karte hain, notebook checking se galtiyan dikh jaati hain, aur mentor one-on-one baat karte hain, taaki confidence badhe.", "Mentoring process, notebook checking"], ["अगर बच्चा homework नहीं करता, तो आपकी team क्या करेगी?", "Notebooks regularly check hoti hain, toh pending kaam turant dikhta hai. Mentor bachche se baat karte hain aur zaroorat ho toh parent ko update dete hain.", "Follow-up process and parent communication"], ["Practice notebooks कौन check करेगा और कितनी बार?", "Subject teachers notebooks check karte hain, galtiyan mark karke concept reinforce karte hain. Exact frequency main approved schedule se confirm karke batata hoon.", "Confirm the approved checking schedule before quoting it"], ["Mentoring में वास्तव में क्या होता है?", "Mentor study habits, routine, discipline aur academic challenges par guidance dete hain. Main aapko mentor ka role, meeting process aur scope dikhata hoon.", "Mentor role, meeting process and scope"], ["अगर teacher बदल गए या class miss हो गई, तो continuity कैसे रहेगी?", "Missed class aur teacher change ke liye hamari written policy hai. Main aapko exact process batata hoon: material, recap aur doubt support kaise milta hai.", "Attendance and missed-learning policy"]]], ["Tests and progress", [["हर 15 दिन test क्यों? क्या इससे बच्चे पर pressure नहीं बढ़ेगा?", "Regular chhote tests se bachcha gaps jaldi pakadta hai aur bade exam ka darr kam hota hai. Har test ke baad feedback milta hai; aim pressure nahi, practice hai.", "Test calendar and a sample feedback report"], ["Test लेने के बाद mistakes सुधारने के लिए क्या होता है?", "Test ke baad analysis hota hai, teacher galtiyan discuss karte hain, aur doubt sessions mein unhe theek kiya jaata hai.", "Post-test analysis process"], ["आप हमें कैसे बताएँगे कि बच्चा improve कर रहा है?", "Parent app par test results aur progress dikhti hai, aur parent communication process ke through regular updates milte hain.", "Parent app demo (only supported features)"], ["Boards और JEE/NEET की preparation साथ कैसे manage होगी?", "Hamare paas subjective board tests bhi hain aur JEE/NEET ke dedicated tests bhi. Timetable dono ko balance karta hai; main aapko schedule dikhata hoon.", "Board test schedule plus exam-specific test calendar"], ["All India ranking में बच्चा किन students से compare होगा?", "SCT/AIATS assessments mein All India ranking milti hai. Main aapko is ranking ka exact scope batata hoon, ki kaun participate karta hai.", "Confirm the ranking scope before explaining"], ["अगर लगातार marks कम आए, तो preparation plan में क्या बदलाव करेंगे?", "Hum marks ke peeche ke reasons dekhte hain: topic gaps, routine ya confidence. Phir teacher aur mentor plan adjust karte hain aur aapke saath discuss karte hain.", "Escalation and mentoring review process"], ["क्या आप rank या selection की guarantee देते हैं?", "Rank guarantee nahi kar sakte. Hum teaching, practice, testing aur support ka process aur verified results explain kar sakte hain.", "Verified results only; never promise ranks"]]], ["Aptitude, Career Discovery and apps", [["हमने JEE/NEET decide कर लिया है—Career Discovery की क्या जरूरत है?", "Bahut achha ki goal clear hai. Career Discovery isse confirm karne aur preparation better plan karne mein help karta hai: kaunse strengths hain, kis area par focus chahiye.", "Sample anonymised report"], ["क्या aptitude assessment बताएगा कि मेरा बच्चा doctor या engineer बन सकता है?", "Nahi, koi test yeh guarantee nahi karta. Assessment ek starting point hai jo current strengths aur development areas dikhata hai. Decision aapke saath milkar lete hain.", "Explain report limits; refer complex reading to the analyst"], ["अगर assessment और बच्चे की पसंद अलग हों, तो आप क्या करेंगे?", "Hum bachche ki pasand ko seriously lete hain. Assessment, subject performance aur exploration ko saath dekh kar options discuss karenge; pressure se choice nahi karenge.", "Qualified analyst for interpretation"], ["AI app का फायदा क्या है, जब पढ़ाई teachers ही करवाएँगे?", "Teachers padhate hain; app practice aur progress tracking mein help karta hai, jaise paper banana aur difficulty choose karna, jahan supported hai.", "App demo of supported features only"], ["Parent app पर मुझे क्या information और controls मिलेंगे?", "Main aapko live demo dikhata hoon: progress, test results, aur paper creation ya difficulty selection jaise controls jo abhi supported hain.", "Live demo; don't promise unsupported controls"], ["क्या app से बच्चे का screen time और बढ़ जाएगा?", "App ka use focused practice ke liye hai, aur aap parent controls se use guide kar sakte hain. Main aapko dikhata hoon ki practice ka kitna hissa app par hai aur kitna notebooks mein.", "Practice mix: notebooks vs app"]]], ["Decision and admission", [["हम पहले demo class लेकर decide कर सकते हैं?", "Zaroor. Main aapke liye convenient demo slot book karta hoon, aur demo ke baad aapke questions ke saath next step discuss karte hain.", "Demo schedule; record the follow-up in CRM"], ["मेरा बच्चा दूसरी coaching में है—उसे यहाँ क्यों shift कराएँ?", "Wahan kya achha work kar raha hai, aur kya concern abhi unresolved hai? Agar koi gap nahi hai, toh hum unnecessary change recommend nahi karenge.", "Discovery questions; respect the current choice"], ["हमें थोड़ा सोचने का समय चाहिए—अभी admission क्यों लें?", "Bilkul. Kaunsi information decision ke liye pending hai? Usko clear karke convenient follow-up time agree karte hain. Agar batch start date confirm hai, toh woh bhi bata deta hoon.", "Only genuine urgency (confirmed batch start date)"], ["आप admission के बाद भी उतना ही support देंगे जितना अभी promise कर रहे हैं?", "Isliye main sirf wahi bata raha hoon jo process mein hai: kaun support karega, kab available hai, aur concern ho toh kisse baat karein. Yeh sab joining ke time written mein milega.", "Support contacts and escalation route"], ["Cab और hostel की fees, availability और arrangements क्या हैं?", "Cab aur boys/girls ke liye alag hostel arrangements hain. Main routes, location, availability aur charges ki current details confirm karke share karta hoon.", "Current routes, hostel availability and charges"], ["अगर कोई concern resolve नहीं हुआ, तो किससे बात करें?", "Aapko ek named contact aur escalation route milega. Main abhi aapko support contact process dikha deta hoon.", "Named escalation contacts"]]]];
+let obCat = "All";
+function renderOB(){
+  const q = ($("obSearch").value||"").toLowerCase().trim();
+  const practice = $("obPractice").checked;
+  const total = OBJ.reduce((a,c)=>a+c[1].length,0);
+  $("obChips").innerHTML = [["All",total],...OBJ.map(c=>[c[0],c[1].length])].map(([n,c])=>`<button type="button" class="chip${obCat===n?" on":""}" data-c="${esc(n)}">${esc(n)}<i>${c}</i></button>`).join("");
+  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{obCat=b.dataset.c;renderOB();});
+  let n=0, html="";
+  OBJ.forEach(([cat,items])=>{
+    const rows = items.map((it,j)=>{n++; return [n,it];}).filter(([k,it])=>(obCat==="All"||obCat===cat)&&(!q||(it.join(" ").toLowerCase().includes(q))));
+    if(!rows.length) return;
+    html += `<div class="ob-cat">${esc(cat)}</div>` + rows.map(([k,it])=>`<details class="ob${practice?" practice":""}"><summary><span class="qn">${k}</span><span class="qt">“${esc(it[0])}”</span><span class="chev">›</span></summary><div class="body"><div class="ans"><b>Suggested answer</b>${esc(it[1])}</div><div class="ready"><b>Keep ready</b>${esc(it[2])}</div><div class="acts">${practice?'<button class="mini rev-ans" type="button">Reveal answer</button>':""}<button class="mini cp" type="button">Copy answer</button></div></div></details>`).join("");
+  });
+  $("obList").innerHTML = html || `<div class="empty">No objection matches “${esc(q)}”. Try fees, batch, test or hostel.</div>`;
+  document.querySelectorAll(".rev-ans").forEach(b=>b.onclick=()=>{b.closest(".ob").classList.add("shown");b.remove();});
+  document.querySelectorAll(".cp").forEach(b=>b.onclick=async()=>{const t=b.closest(".body").querySelector(".ans").childNodes[1].textContent; try{await navigator.clipboard.writeText(t);b.textContent="Copied";}catch(e){const r=document.createRange();r.selectNodeContents(b.closest(".body").querySelector(".ans"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent="Selected, press Ctrl+C";} setTimeout(()=>b.textContent="Copy answer",1800);});
+}
+$("obSearch").addEventListener("input",renderOB);
+$("obPractice").addEventListener("change",renderOB);
+renderOB();
+
+/* ---------- manager scorecard ---------- */
+let dl=null;
+const ART_URL = location.origin + location.pathname;
+function fmtAgo(ts){ if(!ts) return "—"; const d=(Date.now()-ts)/36e5; if(d<1) return Math.max(1,Math.round(d*60))+" min ago"; if(d<24) return Math.round(d)+" h ago"; return Math.round(d/24)+" d ago"; }
+function cellBg(v){ if(v==null) return ""; const p=v/50; return `background:rgba(64,12,77,${(0.08+0.8*p).toFixed(2)});color:${p>0.5?"#fff":"#2A1730"}`; }
+function renderDash(){
+  const el=$("dash");
+  if(!db){ el.innerHTML=`<div class="empty">Loading the team scorecard…</div>`; return; }
+  const rows=lbRows.map(r=>r.d);
+  if(!rows.length){ el.innerHTML=`<div class="empty">No quiz results yet. Share the academy link below; each counsellor's scores appear here as soon as they finish a quiz.</div>`; return; }
+  const n=rows.length, avg=Math.round(rows.reduce((a,d)=>a+(d.total||0),0)/n);
+  const certified=rows.filter(d=>MODS.every(m=>((d.scores||{})[m.id]||0)>=40)).length;
+  const attempts=rows.reduce((a,d)=>a+Object.values(d.attempts||{}).reduce((x,y)=>x+y,0),0);
+  const per=MODS.map(m=>{ const vals=rows.map(d=>(d.scores||{})[m.id]).filter(v=>v!=null); const av=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null; const pass=vals.filter(v=>v>=40).length; return {m,av,taken:vals.length,pass}; });
+  const qstat=[]; MODS.forEach(m=>{ QUIZ[m.id].forEach((q,i)=>{ let c=0,t=0; rows.forEach(d=>{ const r=(d.qres||{})[m.id]; if(r&&r[i]!=null){t++; c+=r[i];} }); if(t) qstat.push({m,q,i,t,pc:c/t}); }); });
+  qstat.sort((a,b)=>a.pc-b.pc||b.t-a.t);
+  el.innerHTML = `<div class="kpis">
+     <div class="kpi"><span>Counsellors</span><b>${n}</b><small>with at least one quiz</small></div>
+     <div class="kpi"><span>Average score</span><b>${avg}</b><small>of 250 points</small></div>
+     <div class="kpi"><span>Fully certified</span><b>${certified}</b><small>passed all 5 modules</small></div>
+     <div class="kpi"><span>Quiz attempts</span><b>${attempts}</b><small>including retakes</small></div></div>
+   <div class="dgrid">
+     <div class="panel"><h3>Average best score by module</h3><div class="note" style="margin-bottom:6px">Bar = average out of 50; rose tick = pass mark (40).</div>
+       ${per.map((p,i)=>`<div class="hb" title="${esc(p.m.title)}: ${p.av==null?"no results":p.av.toFixed(1)+" / 50 average, "+p.pass+" of "+p.taken+" passed"}"><span>0${i+1} ${esc(p.m.title)}</span><div class="tr">${p.av!=null?`<i style="width:${p.av*2}%"></i>`:""}<span class="pm" style="left:80%"></span></div><span class="val">${p.av==null?"—":p.av.toFixed(1)+" · "+p.pass+"/"+p.taken+" pass"}</span></div>`).join("")}
+     </div>
+     <div class="panel"><h3>Questions most often missed</h3><div class="note" style="margin-bottom:4px">Use these for coaching in the 7-day practice plan.</div>
+       ${qstat.slice(0,5).map(x=>`<div class="hq"><div style="min-width:0"><em>Module ${MODS.indexOf(x.m)+1} · Q${x.i+1}</em>${esc(x.q.q)}</div><b title="${Math.round(x.pc*100)}% of ${x.t} answered correctly">${Math.round((1-x.pc)*100)}% miss</b></div>`).join("") || '<div class="note">Not enough answers yet.</div>'}
+     </div>
+   </div>
+   <div class="panel"><h3>Counsellor matrix</h3><div class="lbwrap"><table class="mx"><thead><tr><th>Counsellor</th>${MODS.map((m,i)=>`<th title="${esc(m.title)}">M${i+1}</th>`).join("")}<th>Total</th><th>Attempts</th><th>Last active</th></tr></thead><tbody>
+     ${lbRows.map(r=>{const d=r.d,sc=d.scores||{},at=d.attempts||{};return `<tr><td>${esc(d.name||"Counsellor")}</td>${MODS.map(m=>sc[m.id]==null?`<td class="na">—</td>`:`<td style="${cellBg(sc[m.id])}" title="${esc(m.title)}: ${sc[m.id]}/50, ${at[m.id]||1} attempt(s)">${sc[m.id]}</td>`).join("")}<td style="font-weight:700;color:var(--plum)">${d.total||0}</td><td>${Object.values(at).reduce((a,b)=>a+b,0)||"—"}</td><td style="color:var(--muted)">${fmtAgo(d.updated)}</td></tr>`}).join("")}
+   </tbody></table></div></div>`;
+}
+$("csvBtn").onclick=async()=>{
+  const head=["Counsellor",...MODS.map((m,i)=>"M"+(i+1)+" "+m.title),"Total","Modules passed","Attempts","Last active"];
+  const lines=[head,...lbRows.map(r=>{const d=r.d,sc=d.scores||{};return [d.name||"Counsellor",...MODS.map(m=>sc[m.id]??""),d.total||0,MODS.filter(m=>(sc[m.id]||0)>=40).length,Object.values(d.attempts||{}).reduce((a,b)=>a+b,0),d.updated?new Date(d.updated).toISOString().slice(0,16).replace("T"," "):""];})];
+  const csv=lines.map(l=>l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob=new Blob(["\ufeff"+csv],{type:"text/csv"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="scubus-counsellor-scorecard.csv"; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},500);
+};
+
+/* ---------- share links ---------- */
+function renderShare(){
+  const items=[["Full academy",""],...MODS.map((m,i)=>[`Lesson ${i+1}: ${m.title}`,m.id]),...MODS.map((m,i)=>[`Quiz ${i+1}: ${m.title}`,"quiz-"+m.id]),["Parent objection bank","objections"],["Manager scorecard","dashboard"]];
+  $("share").innerHTML=items.map(([t,h])=>{const u=ART_URL+(h?"#"+h:"");return `<div class="lnk"><div style="min-width:0"><b>${esc(t)}</b><code>${esc(u)}</code></div><button class="mini" type="button" data-u="${esc(u)}">Copy</button></div>`}).join("");
+  document.querySelectorAll(".lnk .mini").forEach(b=>b.onclick=async()=>{ try{ await navigator.clipboard.writeText(b.dataset.u); b.textContent="Copied"; }catch(e){ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling.querySelector("code")); const sl=getSelection(); sl.removeAllRanges(); sl.addRange(r); b.textContent="Selected"; } setTimeout(()=>b.textContent="Copy",1600); });
+}
+renderShare(); renderDash();
+
+/* ---------- deep links ---------- */
+function routeHash(){
+  const h=(location.hash||"").slice(1);
+  let mm=h.match(/^(quiz-)?m([1-5])$/);
+  if(mm){ const i=+mm[2]-1; if(i<MODS.length){ if(mm[1]){ progress.watched[MODS[i].id]=true; LS.set("scubus-academy-progress",progress); } openModule(i,false); setTimeout(()=>$(mm[1]?"quizSec":"playerSec").scrollIntoView({behavior:"smooth"}),150); } return; }
+  const map={objections:"obSec",dashboard:"dashboard",scorecard:"dashboard",scoreboard:"boardSec",share:"shareSec"};
+  if(map[h]) setTimeout(()=>$(map[h]).scrollIntoView({behavior:"smooth"}),150);
+}
+addEventListener("hashchange",routeHash); routeHash();
+</script>
+
+</body>
+</html>
