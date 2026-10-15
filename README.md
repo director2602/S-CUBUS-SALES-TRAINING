@@ -1,7 +1,7 @@
 # S-CUBUS Counsellor Academy
 
-Static training site: five animated counselling lessons with Hinglish role plays, a quiz after each lesson, parent objection bank, team scoreboard and manager scorecard.
+Counsellor training site: five animated counselling lessons with Hinglish role plays, a quiz after each lesson, parent objection bank, team scoreboard, manager scorecard and team logins.
 
 - Hosting: Render static site (publish directory `.`)
-- Scores: Supabase table `public.academy_scores` (row-level security: everyone can read; each device can only update its own row via its device token).
+- Login and scores: Supabase (`academy_users`, `academy_sessions`, `academy_results`), reached only through `academy_*` RPC functions; tables are not directly readable.
 - Characters and voices are AI-generated.
